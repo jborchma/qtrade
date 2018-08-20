@@ -1,5 +1,4 @@
 """module init file
 """
-
-from qtrade import Questrade
-from _version import __version__
+from qtrade._version import __version__
+from qtrade.questrade import Questrade
