@@ -1,0 +1,13 @@
+.DS_Store
+.cache
+build/
+dist/
+*.egg-info/
+*/__pycache__/
+.idea/
+*.pyc
+.pytest_cache/
+
+*.ipynb*
+docs/doctrees
+docs/.buildinfo
