@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 CURR_DIR = os.path.abspath(os.path.dirname(__file__))
 INSTALL_REQUIRES = [
-    "yaml>=3.12",
+    "PyYAML>=3.12",
 ]
 with open(os.path.join(CURR_DIR, "README.md"), encoding="utf-8") as file_open:
     LONG_DESCRIPTION = file_open.read()
