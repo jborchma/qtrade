@@ -46,6 +46,7 @@ class Questrade():
         url = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=' \
             + str(self.access_code)
         data = requests.get(url)
+        data.raise_for_status()
         response = data.json()
 
         self.access_token = response
@@ -79,6 +80,7 @@ class Questrade():
         url = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=' \
             + str(refresh_token)
         data = requests.get(url)
+        data.raise_for_status()
         response = data.json()
 
         # set access token
@@ -108,10 +110,9 @@ class Questrade():
             List of account IDs.
         """
         uri = self.access_token['api_server'] + '/v1/' + 'accounts'
-        try:
-            data = requests.get(uri, headers=self.headers)
-        except Exception:
-            raise Exception
+
+        data = requests.get(uri, headers=self.headers)
+        data.raise_for_status()
 
         response = data.json()
         account_id = []
@@ -161,10 +162,10 @@ class Questrade():
         """
         uri = self.access_token['api_server'] + '/v1/' + 'accounts/' + str(account_id) \
             + '/positions'
-        try:
-            data = requests.get(uri, headers=self.headers)
-        except Exception:
-            raise Exception
+
+        data = requests.get(uri, headers=self.headers)
+        data.raise_for_status()
+
         response = data.json()
         try:
             positions = response['positions']
@@ -218,10 +219,10 @@ class Questrade():
         uri = self.access_token['api_server'] + '/v1/' + 'accounts/' + str(account_id)\
             + '/activities?startTime=' + str(start_date) + 'T00:00:00-05:00&endTime=' \
             + str(end_date) + 'T00:00:00-05:00&'
-        try:
-            data = requests.get(uri, headers=self.headers)
-        except Exception:
-            raise Exception
+
+        data = requests.get(uri, headers=self.headers)
+        data.raise_for_status()
+
         response = data.json()
         try:
             activities = response['activities']
@@ -250,10 +251,8 @@ class Questrade():
                 if len(tickers) > i + 1:
                     uri = uri + ','
 
-        try:
-            data = requests.get(uri, headers=self.headers)
-        except Exception:
-            raise Exception
+        data = requests.get(uri, headers=self.headers)
+        data.raise_for_status()
 
         response = data.json()
         try:
@@ -299,10 +298,8 @@ class Questrade():
                 if len(ids) > i + 1:
                     uri = uri + ','
 
-        try:
-            data = requests.get(uri, headers=self.headers)
-        except Exception:
-            raise Exception
+        data = requests.get(uri, headers=self.headers)
+        data.raise_for_status()
 
         response = data.json()
         try:
@@ -345,10 +342,9 @@ class Questrade():
         uri = uri + 'startTime=' + str(start_date) + 'T00:00:00-05:00&endTime=' + str(end_date) \
             + 'T00:00:00-05:00&interval=' + str(interval)
 
-        try:
-            data = requests.get(uri, headers=self.headers)
-        except Exception:
-            raise Exception
+        data = requests.get(uri, headers=self.headers)
+        data.raise_for_status()
+
         response = data.json()
         try:
             quotes = response['candles']
