@@ -217,10 +217,11 @@ class Questrade():
 
         """
         uri = self.access_token['api_server'] + '/v1/' + 'accounts/' + str(account_id)\
-            + '/activities?startTime=' + str(start_date) + 'T00:00:00-05:00&endTime=' \
-            + str(end_date) + 'T00:00:00-05:00&'
+            + '/activities'
+        payload = {'startTime': str(start_date) + 'T00:00:00-05:00',
+                   'endTime': str(end_date) + 'T00:00:00-05:00'}
 
-        data = requests.get(uri, headers=self.headers)
+        data = requests.get(uri, params=payload, headers=self.headers)
         data.raise_for_status()
 
         response = data.json()
@@ -242,16 +243,10 @@ class Questrade():
         if isinstance(tickers, str):
             tickers = [tickers]
 
-        uri = self.access_token['api_server'] + '/v1/symbols?names='
-        if len(tickers) == 1:
-            uri = uri + tickers[0]
-        if len(tickers) > 1:
-            for i, ticker in enumerate(tickers):
-                uri = uri + ticker
-                if len(tickers) > i + 1:
-                    uri = uri + ','
+        uri = self.access_token['api_server'] + '/v1/symbols'
+        payload = {'names': ",".join(tickers)}
 
-        data = requests.get(uri, headers=self.headers)
+        data = requests.get(uri, params=payload, headers=self.headers)
         data.raise_for_status()
 
         response = data.json()
@@ -289,16 +284,10 @@ class Questrade():
         else:
             ids = [stock['symbolId'] for stock in info]
 
-        uri = self.access_token['api_server'] + '/v1/markets/quotes?ids='
-        if len(ids) == 1:
-            uri = uri + str(ids[0])
-        if len(ids) > 1:
-            for i, symbol_id in enumerate(ids):
-                uri = uri + str(symbol_id)
-                if len(ids) > i + 1:
-                    uri = uri + ','
+        uri = self.access_token['api_server'] + '/v1/markets/quotes'
+        payload = {'ids': ",".join(map(str, ids))}
 
-        data = requests.get(uri, headers=self.headers)
+        data = requests.get(uri, params=payload, headers=self.headers)
         data.raise_for_status()
 
         response = data.json()
@@ -337,12 +326,12 @@ class Questrade():
         # translate tickers to IDs
         info = self.ticker_information(ticker)
         ids = info['symbolId']
-        uri = self.access_token['api_server'] + '/v1/markets/candles/' + str(ids) + '?'
+        uri = self.access_token['api_server'] + '/v1/markets/candles/' + str(ids)
+        payload = {'startTime': str(start_date) + 'T00:00:00-05:00',
+                   'endTime': str(end_date)+ 'T00:00:00-05:00',
+                   'interval': str(interval)}
 
-        uri = uri + 'startTime=' + str(start_date) + 'T00:00:00-05:00&endTime=' + str(end_date) \
-            + 'T00:00:00-05:00&interval=' + str(interval)
-
-        data = requests.get(uri, headers=self.headers)
+        data = requests.get(uri, params=payload, headers=self.headers)
         data.raise_for_status()
 
         response = data.json()
