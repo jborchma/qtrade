@@ -237,8 +237,15 @@ class Questrade():
         """
         This function gets information such as a quote for a single ticker or a list of tickers.
 
-        Input:
-        tickers:     List of tickers
+        Parameters
+        ----------
+        tickers: str or [str]
+            List of tickers or a single ticker
+
+        Returns
+        -------
+        dict or [dict]
+            Dictionary with ticker information or list of dictionaries with ticker information
         """
         if isinstance(tickers, str):
             tickers = [tickers]
@@ -272,7 +279,8 @@ class Questrade():
 
         Returns
         -------
-
+        dict or [dict]
+            Dictionary with quotes or list of dictionaries with quotes
         """
         if isinstance(tickers, str):
             tickers = [tickers]
