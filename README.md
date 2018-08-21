@@ -2,6 +2,14 @@
 
 This is a very basic wrapper for the Questrade API, a Canadian low cost broker.
 
+## Installation
+
+This package can easily be installed via
+
+```
+pip git+https://github.com/jborchma/qtrade.git
+```
+
 ## Usage
 
 The central class can be initialized via
