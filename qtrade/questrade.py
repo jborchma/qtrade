@@ -5,7 +5,7 @@ import datetime
 import requests
 import yaml
 
-from utility import get_access_token_yaml
+from .utility import get_access_token_yaml
 
 class Questrade():
     """Questrade baseclass
