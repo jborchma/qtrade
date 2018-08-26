@@ -7,13 +7,13 @@ from qtrade import Questrade
 TOKEN_URL = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token='
 
 VALID_ACCESS_TOKEN = {'access_token': 'hunter2',
-                      'api_server': 'https://questrade.api.com',
+                      'api_server': "https://questrade.api",
                       'expires_in': 1234,
                       'refresh_token': 'hunter2',
                       'token_type': 'Bearer'}
 
 INVALID_ACCESS_TOKEN = {'access_token': 'hunter3',
-                        'api_server': 'https://questrade.api.com',
+                        'api_server': 'https://questrade.api',
                         'expires_in': 1234,
                         'refresh_token': 'hunter3'}
 
@@ -55,7 +55,7 @@ class MockResponse:
             http_error_msg = '%s Server Error' % (self.status_code)
 
         if http_error_msg:
-            raise Exception(http_error_msg, response=self)
+            raise Exception(http_error_msg)
 
 
 def mocked_access_token_requests_get(*args, **kwargs):
@@ -99,3 +99,25 @@ def test_init_via_incomplete_yaml():
     with pytest.raises(Exception) as e_info:
         _ = Questrade(token_yaml='access_token.yml')
         assert str(e_info.value) == 'Refresh token was not provided.'
+
+@mock.patch('builtins.open', mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch('qtrade.questrade.requests.get', side_effect=mocked_access_token_requests_get)
+def test_refresh_token_yaml(mock_get):
+    """This function tests the refresh token method.
+    """
+    qtrade = Questrade(token_yaml='access_token.yml')
+    qtrade.refresh_access_token()
+    assert set(qtrade.access_token.keys()) == set(['access_token', 'api_server', 'expires_in',
+                                                   'refresh_token', 'token_type'])
+    assert qtrade.access_token['api_server'] == 'https://questrade.api'
+
+@mock.patch('builtins.open', mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch('qtrade.questrade.requests.get', side_effect=mocked_access_token_requests_get)
+def test_refresh_token_non_yaml(mock_get):
+    """This function tests the refresh token method.
+    """
+    qtrade = Questrade(token_yaml='access_token.yml')
+    qtrade.refresh_access_token(from_yaml=False)
+    assert set(qtrade.access_token.keys()) == set(['access_token', 'api_server', 'expires_in',
+                                                   'refresh_token', 'token_type'])
+    assert qtrade.access_token['api_server'] == 'https://questrade.api'

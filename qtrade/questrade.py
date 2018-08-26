@@ -25,7 +25,7 @@ class Questrade():
         self.access_code = access_code
         self.token_yaml = token_yaml
 
-        if self.access_code is None:
+        if access_code is None:
             self.access_token = get_access_token_yaml(self.token_yaml)
             self.headers = {'Authorization': self.access_token['token_type'] \
                 + ' ' + self.access_token['access_token']}
@@ -57,7 +57,8 @@ class Questrade():
 
         #clean the api_server entry of the escape characters
         self.access_token['api_server'] = self.access_token['api_server'].replace("\\", "")
-        self.access_token['api_server'] = self.access_token['api_server'][:-1]
+        if self.access_token['api_server'][-1] == '/':
+            self.access_token['api_server'] = self.access_token['api_server'][:-1]
 
         # set headers
         self.headers = {'Authorization': self.access_token['token_type'] \
@@ -103,7 +104,8 @@ class Questrade():
 
         #clean the api_server entry of the escape characters
         self.access_token['api_server'] = self.access_token['api_server'].replace("\\", "")
-        self.access_token['api_server'] = self.access_token['api_server'][:-1]
+        if self.access_token['api_server'][-1] == '/':
+            self.access_token['api_server'] = self.access_token['api_server'][:-1]
 
         # set headers
         self.headers = {'Authorization': self.access_token['token_type'] \
