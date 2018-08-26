@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/jborchma/qtrade.svg?branch=master)](https://travis-ci.com/jborchma/qtrade)
+
 # Qtrade
 
 This is a very basic Python 3 wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.

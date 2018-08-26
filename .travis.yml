@@ -1,0 +1,12 @@
+language: python
+dist: trusty
+sudo: false
+cache:
+  pip: true
+
+python:
+  - "3.6"
+install:
+  - pip install -r test-requirements.txt
+script:
+  - python -m pytest
