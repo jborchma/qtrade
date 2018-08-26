@@ -1,6 +1,6 @@
 # Qtrade
 
-This is a very basic wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
+This is a very basic Python 3 wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
 
 ## Usage
 
@@ -94,3 +94,8 @@ an account in a certain time frame via
 ```
 activities = qtrade.get_account_activities(123456, '2018-08-01', '2018-08-16')
 ```
+
+
+## Contributors
+
+There is a test suite that can be run via `python -m pytest`.

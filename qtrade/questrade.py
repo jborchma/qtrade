@@ -5,7 +5,9 @@ import datetime
 import requests
 import yaml
 
-from .utility import get_access_token_yaml
+from .utility import get_access_token_yaml, validate_access_token
+
+TOKEN_URL = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token='
 
 class Questrade():
     """Questrade baseclass
@@ -43,11 +45,13 @@ class Questrade():
             Dict with the access token data.
         """
 
-        url = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=' \
-            + str(self.access_code)
+        url = TOKEN_URL + str(self.access_code)
         data = requests.get(url)
         data.raise_for_status()
         response = data.json()
+
+        # validate response
+        validate_access_token(**response)
 
         self.access_token = response
 
@@ -66,23 +70,34 @@ class Questrade():
         return self.access_token
 
 
-    def refresh_access_token(self):
+    def refresh_access_token(self, from_yaml=True):
         """
         This method refreshes the access token saved in access_token.yml. This only works if the
         overall access has not yet expired.
 
-        Output:
-        access token: Dict with the access token data.
-        """
+        Parameters
+        ----------
+        from_yaml: bool, optional [True]
+            This parameter controls if the refresh token is sourced from a yaml file (default)
+            or if the attribute `access_token` is used.
 
-        old_access_token = get_access_token_yaml('access_token.yml')
-        refresh_token = old_access_token['refresh_token']
-        url = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token=' \
-            + str(refresh_token)
+        Returns
+        -------
+        dict
+            Dict with the access token data.
+        """
+        if from_yaml:
+            old_access_token = get_access_token_yaml('access_token.yml')
+        else:
+            old_access_token = self.access_token
+
+        url = TOKEN_URL + str(old_access_token['refresh_token'])
         data = requests.get(url)
         data.raise_for_status()
         response = data.json()
 
+        # validate response
+        validate_access_token(**response)
         # set access token
         self.access_token = response
 
