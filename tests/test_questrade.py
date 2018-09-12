@@ -16,7 +16,32 @@ INVALID_ACCESS_TOKEN = {'access_token': 'hunter3',
                         'api_server': 'https://questrade.api',
                         'expires_in': 1234,
                         'refresh_token': 'hunter3'}
-ACCOUNT_RESPONSE = { 'accounts': [{'number': 123}, {'number': 456}]}
+ACCOUNT_RESPONSE = {'accounts': [{'number': 123}, {'number': 456}]}
+POSITION_RESPONSE = {'positions': [{'averageEntryPrice': 1000,
+                                    'closedPnl': 0,
+                                    'closedQuantity': 0,
+                                    'currentMarketValue': 3120,
+                                    'currentPrice': 1040,
+                                    'isRealTime': False,
+                                    'isUnderReorg': False,
+                                    'openPnl': 120,
+                                    'openQuantity': 3,
+                                    'symbol': 'XYZ',
+                                    'symbolId': 1234567,
+                                    'totalCost': 3000},
+                                   {'averageEntryPrice': 500,
+                                    'closedPnl': 0,
+                                    'closedQuantity': 0,
+                                    'currentMarketValue': 4000,
+                                    'currentPrice': 1000,
+                                    'isRealTime': False,
+                                    'isUnderReorg': False,
+                                    'openPnl': 2000,
+                                    'openQuantity': 4,
+                                    'symbol': 'ABC',
+                                    'symbolId': 7654321,
+                                    'totalCost': 2000}]}
+
 
 ACCESS_TOKEN_YAML = """access_token: hunter2
 api_server: www.api_url.com
@@ -72,8 +97,16 @@ def mocked_access_token_requests_get(*args, **kwargs):
 def mocked_acct_id_get(*args, **kwargs):
     """mocking acct_id requests get
     """
-    if args[0] == "www.api_url.com" + '/v1/' + 'accounts':
+    if args[0] == 'www.api_url.com/v1/accounts':
         return MockResponse(ACCOUNT_RESPONSE, 200)
+    else:
+        return MockResponse(None, 404)
+
+def mocked_positions_get(*args, **kwargs):
+    """mocking acct_id requests get
+    """
+    if args[0] == 'www.api_url.com/v1/accounts/123/positions':
+        return MockResponse(POSITION_RESPONSE, 200)
     else:
         return MockResponse(None, 404)
 
@@ -140,3 +173,18 @@ def test_get_account_id(mock_get):
     qtrade = Questrade(token_yaml='access_token.yml')
     acct_id = qtrade.get_account_id()
     assert acct_id == [123, 456]
+
+@mock.patch('builtins.open', mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch('qtrade.questrade.requests.get', side_effect=mocked_positions_get)
+def test_get_positions(mock_get):
+    """This function tests the get account positions method.
+    """
+    qtrade = Questrade(token_yaml='access_token.yml')
+    positions = qtrade.get_account_positions(123)
+    assert positions[0]['symbol'] == 'XYZ'
+    assert positions[1]['symbol'] == 'ABC'
+    assert positions[0]['currentMarketValue'] == 3120
+    assert positions[1]['currentMarketValue'] == 4000
+    assert len(positions) == 2
+    assert len(positions[0]) == 12
+    assert len(positions[1]) == 12

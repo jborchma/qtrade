@@ -179,7 +179,6 @@ class Questrade():
         """
         uri = self.access_token['api_server'] + '/v1/' + 'accounts/' + str(account_id) \
             + '/positions'
-
         data = requests.get(uri, headers=self.headers)
         data.raise_for_status()
 
