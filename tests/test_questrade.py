@@ -16,6 +16,7 @@ INVALID_ACCESS_TOKEN = {'access_token': 'hunter3',
                         'api_server': 'https://questrade.api',
                         'expires_in': 1234,
                         'refresh_token': 'hunter3'}
+ACCOUNT_RESPONSE = { 'accounts': [{'number': 123}, {'number': 456}]}
 
 ACCESS_TOKEN_YAML = """access_token: hunter2
 api_server: www.api_url.com
@@ -59,7 +60,7 @@ class MockResponse:
 
 
 def mocked_access_token_requests_get(*args, **kwargs):
-    """mocking requests get method
+    """mocking access token requests get method
     """
     if args[0] == TOKEN_URL + 'hunter2':
         return MockResponse(VALID_ACCESS_TOKEN, 200)
@@ -67,6 +68,15 @@ def mocked_access_token_requests_get(*args, **kwargs):
         return MockResponse(INVALID_ACCESS_TOKEN, 200)
     else:
         return MockResponse(None, 404)
+
+def mocked_acct_id_get(*args, **kwargs):
+    """mocking acct_id requests get
+    """
+    if args[0] == "www.api_url.com" + '/v1/' + 'accounts':
+        return MockResponse(ACCOUNT_RESPONSE, 200)
+    else:
+        return MockResponse(None, 404)
+
 
 @mock.patch('qtrade.questrade.requests.get', side_effect=mocked_access_token_requests_get)
 def test_get_access_token(mock_get):
@@ -121,3 +131,12 @@ def test_refresh_token_non_yaml(mock_get):
     assert set(qtrade.access_token.keys()) == set(['access_token', 'api_server', 'expires_in',
                                                    'refresh_token', 'token_type'])
     assert qtrade.access_token['api_server'] == 'https://questrade.api'
+
+@mock.patch('builtins.open', mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch('qtrade.questrade.requests.get', side_effect=mocked_acct_id_get)
+def test_get_account_id(mock_get):
+    """This function tests the account ID function.
+    """
+    qtrade = Questrade(token_yaml='access_token.yml')
+    acct_id = qtrade.get_account_id()
+    assert acct_id == [123, 456]
