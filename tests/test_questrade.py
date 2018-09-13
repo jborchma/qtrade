@@ -228,3 +228,6 @@ def test_get_activity(mock_get):
     assert activities[0]['tradeDate'] == '2018-08-07T00:00:00.000000-04:00'
     assert len(activities) == 1
     assert len(activities[0]) == 14
+
+    with pytest.raises(Exception):
+        _ = qtrade.get_account_activities(987, '2018-08-07', '2018-08-10')
