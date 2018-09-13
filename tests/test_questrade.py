@@ -3,7 +3,6 @@
 from unittest import mock
 import pytest
 from qtrade import Questrade
-from requests import HTTPError
 
 TOKEN_URL = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token='
 
@@ -127,11 +126,9 @@ def mocked_positions_get(*args, **kwargs):
 def mocked_activities_get(*args, **kwargs):
     """mocking activities requests get
     """
-    print(args[0])
-    print(kwargs)
     if args[0] == 'www.api_url.com/v1/accounts/123/activities' \
     and kwargs['params'] == {'endTime': '2018-08-10T00:00:00-05:00',
-                              'startTime': '2018-08-07T00:00:00-05:00'}:
+                             'startTime': '2018-08-07T00:00:00-05:00'}:
         return MockResponse(ACTIVITY_RESPONSE, 200)
     else:
         return MockResponse(None, 404)
