@@ -3,6 +3,7 @@
 from unittest import mock
 import pytest
 from qtrade import Questrade
+from requests import HTTPError
 
 TOKEN_URL = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token='
 
@@ -41,7 +42,20 @@ POSITION_RESPONSE = {'positions': [{'averageEntryPrice': 1000,
                                     'symbol': 'ABC',
                                     'symbolId': 7654321,
                                     'totalCost': 2000}]}
-
+ACTIVITY_RESPONSE = {'activities': [{'action': 'Buy',
+                                     'commission': -5.01,
+                                     'currency': 'CAD',
+                                     'description': 'description text',
+                                     'grossAmount': -1000,
+                                     'netAmount': -1005.01,
+                                     'price': 10,
+                                     'quantity': 100,
+                                     'settlementDate': '2018-08-09T00:00:00.000000-04:00',
+                                     'symbol': 'XYZ.TO',
+                                     'symbolId': 1234567,
+                                     'tradeDate': '2018-08-07T00:00:00.000000-04:00',
+                                     'transactionDate': '2018-08-09T00:00:00.000000-04:00',
+                                     'type': 'Trades'}]}
 
 ACCESS_TOKEN_YAML = """access_token: hunter2
 api_server: www.api_url.com
@@ -110,6 +124,17 @@ def mocked_positions_get(*args, **kwargs):
     else:
         return MockResponse(None, 404)
 
+def mocked_activities_get(*args, **kwargs):
+    """mocking activities requests get
+    """
+    print(args[0])
+    print(kwargs)
+    if args[0] == 'www.api_url.com/v1/accounts/123/activities' \
+    and kwargs['params'] == {'endTime': '2018-08-10T00:00:00-05:00',
+                              'startTime': '2018-08-07T00:00:00-05:00'}:
+        return MockResponse(ACTIVITY_RESPONSE, 200)
+    else:
+        return MockResponse(None, 404)
 
 @mock.patch('qtrade.questrade.requests.get', side_effect=mocked_access_token_requests_get)
 def test_get_access_token(mock_get):
@@ -188,3 +213,18 @@ def test_get_positions(mock_get):
     assert len(positions) == 2
     assert len(positions[0]) == 12
     assert len(positions[1]) == 12
+
+    with pytest.raises(Exception):
+        _ = qtrade.get_account_positions(987)
+
+@mock.patch('builtins.open', mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch('qtrade.questrade.requests.get', side_effect=mocked_activities_get)
+def test_get_activity(mock_get):
+    """This function tests the get account activities method.
+    """
+    qtrade = Questrade(token_yaml='access_token.yml')
+    activities = qtrade.get_account_activities(123, '2018-08-07', '2018-08-10')
+    assert activities[0]['action'] == 'Buy'
+    assert activities[0]['tradeDate'] == '2018-08-07T00:00:00.000000-04:00'
+    assert len(activities) == 1
+    assert len(activities[0]) == 14
