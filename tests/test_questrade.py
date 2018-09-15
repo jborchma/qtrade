@@ -55,6 +55,43 @@ ACTIVITY_RESPONSE = {'activities': [{'action': 'Buy',
                                      'tradeDate': '2018-08-07T00:00:00.000000-04:00',
                                      'transactionDate': '2018-08-09T00:00:00.000000-04:00',
                                      'type': 'Trades'}]}
+TICKER_INFO = {'averageVol20Days': 2,
+               'averageVol3Months': 4,
+               'currency': 'CAD',
+               'description': 'XYZ Company Inc.',
+               'dividend': 0,
+               'dividendDate': None,
+               'eps': 2,
+               'exDate': None,
+               'hasOptions': True,
+               'highPrice52': 25.00,
+               'industryGroup': 'XYZ Industry',
+               'industrySector': 'XYZ',
+               'industrySubgroup': 'XYZ Special',
+               'isQuotable': True,
+               'isTradable': True,
+               'listingExchange': 'TSX',
+               'lowPrice52': 9.83,
+               'marketCap': 275784564,
+               'minTicks': [{'minTick': 0.005, 'pivot': 0},
+                            {'minTick': 0.01, 'pivot': 0.5}],
+               'optionContractDeliverables': {'cashInLieu': 0, 'underlyings': []},
+               'optionDurationType': None,
+               'optionExerciseType': None,
+               'optionExpiryDate': None,
+               'optionRoot': '',
+               'optionStrikePrice': None,
+               'optionType': None,
+               'outstandingShares': 1234664,
+               'pe': None,
+               'prevDayClosePrice': 20.01,
+               'securityType': 'Stock',
+               'symbol': 'XYZ',
+               'symbolId': 1234567,
+               'tradeUnit': 1,
+               'yield': 0}
+TICKER_RESPONSE_SINGLE = {'symbols': [TICKER_INFO]}
+TICKER_RESPONSE_MULTIPLE = {'symbols': [TICKER_INFO, TICKER_INFO]}
 
 ACCESS_TOKEN_YAML = """access_token: hunter2
 api_server: www.api_url.com
@@ -130,6 +167,18 @@ def mocked_activities_get(*args, **kwargs):
     and kwargs['params'] == {'endTime': '2018-08-10T00:00:00-05:00',
                              'startTime': '2018-08-07T00:00:00-05:00'}:
         return MockResponse(ACTIVITY_RESPONSE, 200)
+    else:
+        return MockResponse(None, 404)
+
+def mocked_ticker_get(*args, **kwargs):
+    """mocking ticker info requests get
+    """
+    if args[0] == 'www.api_url.com/v1/symbols' \
+    and kwargs['params'] == {'names': 'XYZ'}:
+        return MockResponse(TICKER_RESPONSE_SINGLE, 200)
+    elif args[0] == 'www.api_url.com/v1/symbols' \
+    and kwargs['params'] == {'names': 'XYZ,ABC'}:
+        return MockResponse(TICKER_RESPONSE_MULTIPLE, 200)
     else:
         return MockResponse(None, 404)
 
@@ -228,3 +277,20 @@ def test_get_activity(mock_get):
 
     with pytest.raises(Exception):
         _ = qtrade.get_account_activities(987, '2018-08-07', '2018-08-10')
+
+@mock.patch('builtins.open', mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch('qtrade.questrade.requests.get', side_effect=mocked_ticker_get)
+def test_get_ticker_information(mock_get):
+    """This function tests the get ticker information method.
+    """
+    qtrade = Questrade(token_yaml='access_token.yml')
+    ticker_info_single = qtrade.ticker_information('XYZ')
+    assert len(ticker_info_single) == 34
+    assert ticker_info_single['symbol'] == 'XYZ'
+    assert ticker_info_single['marketCap'] == 275784564
+
+    ticker_info_multiple = qtrade.ticker_information(['XYZ', 'ABC'])
+    assert len(ticker_info_multiple) == 2
+    assert len(ticker_info_multiple[0]) == 34
+    assert len(ticker_info_multiple[1]) == 34
+    assert ticker_info_multiple[0]['symbol'] == 'XYZ'
