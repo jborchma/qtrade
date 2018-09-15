@@ -7,6 +7,7 @@ dist/
 .idea/
 *.pyc
 .pytest_cache/
+.coverage
 
 *.ipynb*
 docs/doctrees

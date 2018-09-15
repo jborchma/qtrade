@@ -29,6 +29,13 @@ def test_get_access_token_yaml():
     assert access_token['refresh_token'] == 'hunter2'
     assert access_token['token_type'] == 'Bearer'
 
+def test_get_access_token_error():
+    """This functions tests the error behaviour.
+    """
+
+    with pytest.raises(Exception) as e_info:
+        access_token = utility.get_access_token_yaml('filename.yml')
+
 @mock.patch('builtins.open', mock.mock_open(read_data=INCOMPLETE_ACCESS_TOKEN_YAML))
 def test_get_access_token_yaml_error():
     """This function tests the get access token yaml function
