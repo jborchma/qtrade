@@ -92,6 +92,45 @@ TICKER_INFO = {'averageVol20Days': 2,
                'yield': 0}
 TICKER_RESPONSE_SINGLE = {'symbols': [TICKER_INFO]}
 TICKER_RESPONSE_MULTIPLE = {'symbols': [TICKER_INFO, TICKER_INFO]}
+QUOTE = {'VWAP': 0,
+         'askPrice': None,
+         'askSize': 0,
+         'bidPrice': None,
+         'bidSize': 0,
+         'delay': 0,
+         'high52w': 25.00,
+         'highPrice': 0,
+         'isHalted': False,
+         'lastTradePrice': 20.01,
+         'lastTradePriceTrHrs': None,
+         'lastTradeSize': 0,
+         'lastTradeTick': 'Equal',
+         'lastTradeTime': '2018-09-14T00:00:00.000000-04:00',
+         'low52w': 9.83,
+         'lowPrice': 0,
+         'openPrice': 0,
+         'symbol': 'XYZ',
+         'symbolId': 1234567,
+         'tier': '',
+         'volume': 0}
+QUOTE_RESPONSE_SINGLE = {'quotes': [QUOTE]}
+QUOTE_RESPONSE_MULTIPLE = {'quotes': [QUOTE, QUOTE]}
+HIST_RESPONSE = {'candles': [{'VWAP': 34.246962,
+                              'close': 33.56,
+                              'end': '2018-08-02T00:00:00.000000-04:00',
+                              'high': 34.97,
+                              'low': 33.51,
+                              'open': 34.7,
+                              'start': '2018-08-01T01:00:00.000000-04:00',
+                              'volume': 3251329},
+                             {'VWAP': 33.724063,
+                              'close': 34.4,
+                              'end': '2018-08-03T00:00:00.000000-04:00',
+                              'high': 34.57,
+                              'low': 32.85,
+                              'open': 33.59,
+                              'start': '2018-08-02T00:00:00.000000-04:00',
+                              'volume': 3642444}]}
 
 ACCESS_TOKEN_YAML = """access_token: hunter2
 api_server: www.api_url.com
@@ -179,6 +218,38 @@ def mocked_ticker_get(*args, **kwargs):
     elif args[0] == 'www.api_url.com/v1/symbols' \
     and kwargs['params'] == {'names': 'XYZ,ABC'}:
         return MockResponse(TICKER_RESPONSE_MULTIPLE, 200)
+    else:
+        return MockResponse(None, 404)
+
+def mocked_quote_get(*args, **kwargs):
+    """mocking quote requests get
+    """
+    if args[0] == 'www.api_url.com/v1/symbols' \
+    and kwargs['params'] == {'names': 'XYZ'}:
+        return MockResponse(TICKER_RESPONSE_SINGLE, 200)
+    elif args[0] == 'www.api_url.com/v1/symbols' \
+    and kwargs['params'] == {'names': 'XYZ,ABC'}:
+        return MockResponse(TICKER_RESPONSE_MULTIPLE, 200)
+    if args[0] == 'www.api_url.com/v1/markets/quotes'\
+    and kwargs['params'] == {'ids': '1234567'}:
+        return MockResponse(QUOTE_RESPONSE_SINGLE, 200)
+    elif args[0] == 'www.api_url.com/v1/markets/quotes' \
+    and kwargs['params'] == {'ids': '1234567,1234567'}:
+        return MockResponse(QUOTE_RESPONSE_MULTIPLE, 200)
+    else:
+        return MockResponse(None, 404)
+
+def mocked_historical_get(*args, **kwargs):
+    """mocking historical data requests get
+    """
+    print(kwargs['params'])
+    if args[0] == 'www.api_url.com/v1/symbols' \
+    and kwargs['params'] == {'names': 'XYZ'}:
+        return MockResponse(TICKER_RESPONSE_SINGLE, 200)
+    if args[0] == 'www.api_url.com/v1/markets/candles/1234567'\
+    and kwargs['params'] == {'startTime': '2018-08-01T00:00:00-05:00', 'interval': 'OneDay',
+                             'endTime': '2018-08-02T00:00:00-05:00'}:
+        return MockResponse(HIST_RESPONSE, 200)
     else:
         return MockResponse(None, 404)
 
@@ -294,3 +365,35 @@ def test_get_ticker_information(mock_get):
     assert len(ticker_info_multiple[0]) == 34
     assert len(ticker_info_multiple[1]) == 34
     assert ticker_info_multiple[0]['symbol'] == 'XYZ'
+
+
+@mock.patch('builtins.open', mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch('qtrade.questrade.requests.get', side_effect=mocked_quote_get)
+def test_get_quote(mock_get):
+    """This function tests the get quote method.
+    """
+    qtrade = Questrade(token_yaml='access_token.yml')
+    quote_single = qtrade.get_quote('XYZ')
+    assert len(quote_single) == 21
+    assert quote_single['high52w'] == 25.00
+    assert quote_single['symbolId'] == 1234567
+
+    quote_multiple = qtrade.get_quote(['XYZ', 'ABC'])
+    assert len(quote_multiple) == 2
+    assert len(quote_multiple[0]) == 21
+    assert len(quote_multiple[1]) == 21
+    assert quote_multiple[0]['high52w'] == 25.00
+    assert quote_multiple[1]['high52w'] == 25.00
+
+@mock.patch('builtins.open', mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch('qtrade.questrade.requests.get', side_effect=mocked_historical_get)
+def test_get_historical_data(mock_get):
+    """This function tests the get historical data method.
+    """
+    qtrade = Questrade(token_yaml='access_token.yml')
+    historical_data = qtrade.get_historical_data('XYZ', '2018-08-01', '2018-08-02', 'OneDay')
+    assert len(historical_data) == 2
+    assert len(historical_data[0]) == 8
+    assert len(historical_data[1]) == 8
+    assert historical_data[0]['start'] == '2018-08-01T01:00:00.000000-04:00'
+    assert historical_data[1]['start'] == '2018-08-02T00:00:00.000000-04:00'
