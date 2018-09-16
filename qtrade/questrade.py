@@ -367,27 +367,42 @@ class Questrade():
 
         return quotes
 
-# def get_20_moving_volume_average(id):
-#
-#     today = datetime.date.today().strftime("%Y-%m-%d")
-#     start = (datetime.date.today() - datetime.timedelta(days=29)).strftime("%Y-%m-%d")
-#     vol_hist = get_historical_data(8049,start,today,'OneDay')
-#
-#     # if there are less than 20 trading days in the time interval pulled, get more
-#     i = 1
-#     while len(vol_hist) < 20:
-#         start = (datetime.date.today() - datetime.timedelta(days=29 + i)).strftime("%Y-%m-%d")
-#         vol_hist = get_historical_data(8049,start,today,'OneDay')
-#         i += 1
-#
-#     # oders list by time interval, just to be safe
-#     vol_hist = sorted(vol_hist, key=lambda k: k['start'])
-#
-#     volumes = []
-#     for entry in vol_hist[-20:]:
-#         volumes.append(entry['volume'])
-#
-#     avg_vol = np.mean(volumes)
-#     std_dev_vol = np.std(volumes)
-#
-#     return avg_vol,std_dev_vol
+    def submit_order(self, acct_id, order_dict):
+        """
+        This method submits an order to Questrade. The order information is provided in a
+        dictionary of the form
+
+        ``{"accountNumber" : 1234567,
+           "symbolId": 3925293,
+           "quantity": 1,
+           "icebergQuantity": 1,
+           "limitPrice": 57.58,
+           "isAllOrNone": True,
+           "isAnonymous": False,
+           "orderType": "Limit",
+           "timeInForce": "GoodTillCanceled",
+           "action": "Buy",
+           "primaryRoute": "AUTO",
+           "secondaryRoute": "AUTO"
+        }``
+
+        Note that currently only partner apps can submit orders to the Questrade API.
+
+        Parameters
+        ----------
+        acct_id: int
+            Account ID for the account to which the order is to be submitted.
+        order_dict: dict
+            Dictionary with the necessary order entries.
+
+        Returns
+        -------
+        dict
+            Dictionary with the API response to the order submission.
+        """
+        uri = self.access_token['api_server'] + '/v1/accounts/' + str(acct_id) + '/orders'
+        data = requests.post(uri, json=order_dict, headers=self.headers)
+        data.raise_for_status()
+        response = data.json()
+
+        return response
