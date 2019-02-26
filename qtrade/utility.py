@@ -1,7 +1,10 @@
 """Collection of utility functions
 """
-
+import logging
 import yaml
+
+log = logging.getLogger(__name__) #pylint: disable=C0103
+
 
 def get_access_token_yaml(token_yaml):
     """Utility function to read in access token yaml
@@ -18,8 +21,10 @@ def get_access_token_yaml(token_yaml):
     """
     try:
         with open(token_yaml) as yaml_file:
+            log.debug("Loading access token from yaml...")
             token_yaml = yaml.load(yaml_file)
     except Exception:
+        log.error("Error loading access token from yaml...")
         raise
 
     validate_access_token(**token_yaml)
@@ -50,6 +55,7 @@ def validate_access_token(access_token=None, api_server=None, expires_in=None,
     Exception
         If any of the inputs is None.
     """
+    log.debug("Validating access token...")
     if access_token is None:
         raise Exception('Access token was not provided.')
     if api_server is None:
