@@ -1,11 +1,13 @@
 """Core module for Questrade API wrapper
 """
 
-import datetime
+import logging
 import requests
 import yaml
 
 from .utility import get_access_token_yaml, validate_access_token
+
+log = logging.getLogger(__name__) #pylint: disable=C0103
 
 TOKEN_URL = 'https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token='
 
@@ -46,6 +48,7 @@ class Questrade():
         """
 
         url = TOKEN_URL + str(self.access_code)
+        log.info("Getting access token...")
         data = requests.get(url)
         data.raise_for_status()
         response = data.json()
@@ -66,6 +69,7 @@ class Questrade():
 
         # save access token
         with open('access_token.yml', 'w') as yaml_file:
+            log.debug("Saving access token to yaml file...")
             yaml.dump(self.access_token, yaml_file)
 
         return self.access_token
@@ -93,6 +97,7 @@ class Questrade():
             old_access_token = self.access_token
 
         url = TOKEN_URL + str(old_access_token['refresh_token'])
+        log.info("Refreshing access token...")
         data = requests.get(url)
         data.raise_for_status()
         response = data.json()
@@ -113,6 +118,7 @@ class Questrade():
 
         # save access token
         with open('access_token.yml', 'w') as yaml_file:
+            log.debug("Saving access token to yaml file...")
             yaml.dump(self.access_token, yaml_file)
 
         return self.access_token
@@ -128,6 +134,7 @@ class Questrade():
         """
         uri = self.access_token['api_server'] + '/v1/' + 'accounts'
 
+        log.info("Getting account ID...")
         data = requests.get(uri, headers=self.headers)
         data.raise_for_status()
 
@@ -179,6 +186,7 @@ class Questrade():
         """
         uri = self.access_token['api_server'] + '/v1/' + 'accounts/' + str(account_id) \
             + '/positions'
+        log.info("Getting account positions...")
         data = requests.get(uri, headers=self.headers)
         data.raise_for_status()
 
@@ -237,6 +245,7 @@ class Questrade():
         payload = {'startTime': str(start_date) + 'T00:00:00-05:00',
                    'endTime': str(end_date) + 'T00:00:00-05:00'}
 
+        log.info("Getting account activities...")
         data = requests.get(uri, params=payload, headers=self.headers)
         data.raise_for_status()
 
@@ -269,6 +278,7 @@ class Questrade():
         uri = self.access_token['api_server'] + '/v1/symbols'
         payload = {'names': ",".join(tickers)}
 
+        log.info("Getting ticker data...")
         data = requests.get(uri, params=payload, headers=self.headers)
         data.raise_for_status()
 
@@ -311,6 +321,7 @@ class Questrade():
         uri = self.access_token['api_server'] + '/v1/markets/quotes'
         payload = {'ids': ",".join(map(str, ids))}
 
+        log.info("Getting quote...")
         data = requests.get(uri, params=payload, headers=self.headers)
         data.raise_for_status()
 
@@ -355,6 +366,8 @@ class Questrade():
                    'endTime': str(end_date)+ 'T00:00:00-05:00',
                    'interval': str(interval)}
 
+        log.info("Getting historical data for {0} from {1} to {2}".format(
+            ticker, start_date, end_date))
         data = requests.get(uri, params=payload, headers=self.headers)
         data.raise_for_status()
 
@@ -401,6 +414,7 @@ class Questrade():
             Dictionary with the API response to the order submission.
         """
         uri = self.access_token['api_server'] + '/v1/accounts/' + str(acct_id) + '/orders'
+        log.info("Posting order...")
         data = requests.post(uri, json=order_dict, headers=self.headers)
         data.raise_for_status()
         response = data.json()
