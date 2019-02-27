@@ -4,8 +4,17 @@
 
 This is a very basic Python 3 wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
 
+## Installation
+
+This package is available via [PyPI](https://pypi.org/project/qtrade/) and can be installed via the command
+
+```
+pip install qtrade
+```
+
 ## Usage
 
+The main class of the package is called `Questrade` and houses most of the functionality provided by the package. Below are a few examples for possible use cases.
 
 ### Token management
 
