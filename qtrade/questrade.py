@@ -23,6 +23,7 @@ class Questrade():
 
         self.access_token = None
         self.headers = None
+        self.session = requests.Session()
 
         self.access_code = access_code
         self.token_yaml = token_yaml
@@ -31,11 +32,40 @@ class Questrade():
             self.access_token = get_access_token_yaml(self.token_yaml)
             self.headers = {'Authorization': self.access_token['token_type'] \
                 + ' ' + self.access_token['access_token']}
+            # add headers to session
+            self.session.headers.update(self.headers)
         else:
             self.get_access_token()
 
         self.account_id = None
         self.positions = None
+
+    def _send_message(self, method, endpoint, params=None, data=None, json=None):#pylint: disable=R0913
+        """Send an API requests
+
+        Parameters
+        ----------
+        method: str
+            HTTP method (get, post, delete, etc.)
+        endpoint: str
+            Endpoint (to be added to base URL)
+        params: dict, optional
+            HTTP request parameters
+        data: dict, optional
+            JSON-encoded string payload for POST
+        json: dict, optional
+            Dictionary payload for POST
+
+        Returns
+        -------
+        dict/list:
+            JSON response
+        """
+        url = self.access_token['api_server'] + '/v1/' + endpoint
+        resp = self.session.request(method, url, params=params, data=data, json=json,
+                                    timeout=30)
+        resp.raise_for_status()
+        return resp.json()
 
     def get_access_token(self):
         """
@@ -66,6 +96,8 @@ class Questrade():
         # set headers
         self.headers = {'Authorization': self.access_token['token_type'] \
             + ' ' + self.access_token['access_token']}
+
+        self.session.headers.update(self.headers)
 
         # save access token
         with open('access_token.yml', 'w') as yaml_file:
@@ -116,6 +148,9 @@ class Questrade():
         self.headers = {'Authorization': self.access_token['token_type'] \
             + ' ' + self.access_token['access_token']}
 
+        #update headers
+        self.session.headers.update(self.headers)
+
         # save access token
         with open('access_token.yml', 'w') as yaml_file:
             log.debug("Saving access token to yaml file...")
@@ -132,13 +167,9 @@ class Questrade():
         list:
             List of account IDs.
         """
-        uri = self.access_token['api_server'] + '/v1/' + 'accounts'
-
         log.info("Getting account ID...")
-        data = requests.get(uri, headers=self.headers)
-        data.raise_for_status()
+        response = self._send_message('get', 'accounts')
 
-        response = data.json()
         account_id = []
         try:
             for account in response['accounts']:
@@ -184,13 +215,8 @@ class Questrade():
             information.
 
         """
-        uri = self.access_token['api_server'] + '/v1/' + 'accounts/' + str(account_id) \
-            + '/positions'
         log.info("Getting account positions...")
-        data = requests.get(uri, headers=self.headers)
-        data.raise_for_status()
-
-        response = data.json()
+        response = self._send_message('get', 'accounts/' + str(account_id) + '/positions')
         try:
             positions = response['positions']
         except Exception:
@@ -240,16 +266,13 @@ class Questrade():
             information.
 
         """
-        uri = self.access_token['api_server'] + '/v1/' + 'accounts/' + str(account_id)\
-            + '/activities'
         payload = {'startTime': str(start_date) + 'T00:00:00-05:00',
                    'endTime': str(end_date) + 'T00:00:00-05:00'}
 
         log.info("Getting account activities...")
-        data = requests.get(uri, params=payload, headers=self.headers)
-        data.raise_for_status()
+        response = self._send_message('get', 'accounts/' + str(account_id)+ '/activities',
+                                      params=payload)
 
-        response = data.json()
         try:
             activities = response['activities']
         except Exception:
@@ -275,14 +298,10 @@ class Questrade():
         if isinstance(tickers, str):
             tickers = [tickers]
 
-        uri = self.access_token['api_server'] + '/v1/symbols'
         payload = {'names': ",".join(tickers)}
 
         log.info("Getting ticker data...")
-        data = requests.get(uri, params=payload, headers=self.headers)
-        data.raise_for_status()
-
-        response = data.json()
+        response = self._send_message('get', 'symbols', params=payload)
         try:
             symbols = response['symbols']
         except Exception:
@@ -318,14 +337,10 @@ class Questrade():
         else:
             ids = [stock['symbolId'] for stock in info]
 
-        uri = self.access_token['api_server'] + '/v1/markets/quotes'
         payload = {'ids': ",".join(map(str, ids))}
 
         log.info("Getting quote...")
-        data = requests.get(uri, params=payload, headers=self.headers)
-        data.raise_for_status()
-
-        response = data.json()
+        response = self._send_message('get', 'markets/quotes', params=payload)
         try:
             quotes = response['quotes']
         except Exception:
@@ -361,17 +376,14 @@ class Questrade():
         # translate tickers to IDs
         info = self.ticker_information(ticker)
         ids = info['symbolId']
-        uri = self.access_token['api_server'] + '/v1/markets/candles/' + str(ids)
         payload = {'startTime': str(start_date) + 'T00:00:00-05:00',
                    'endTime': str(end_date)+ 'T00:00:00-05:00',
                    'interval': str(interval)}
 
         log.info("Getting historical data for {0} from {1} to {2}".format(
             ticker, start_date, end_date))
-        data = requests.get(uri, params=payload, headers=self.headers)
-        data.raise_for_status()
 
-        response = data.json()
+        response = self._send_message('get', 'markets/candles/' + str(ids), params=payload)
         try:
             quotes = response['candles']
         except Exception:
@@ -415,8 +427,9 @@ class Questrade():
         """
         uri = self.access_token['api_server'] + '/v1/accounts/' + str(acct_id) + '/orders'
         log.info("Posting order...")
-        data = requests.post(uri, json=order_dict, headers=self.headers)
+        data = self.session.post(uri, json=order_dict)
         data.raise_for_status()
-        response = data.json()
+        response = self._send_message('post', 'accounts/' + str(acct_id) + '/orders',
+                                      json=order_dict)
 
         return response
