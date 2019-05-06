@@ -394,24 +394,21 @@ class Questrade():
 
     def submit_order(self, acct_id, order_dict):
         """
-        This method submits an order to Questrade. The order information is provided in a
-        dictionary of the form
+        This method submits an order to Questrade. Note that currently only partner apps can submit
+        orders to the Questrade API. The order information is provided in a dictionary of the form
 
-        ``{"accountNumber" : 1234567,
-           "symbolId": 3925293,
-           "quantity": 1,
-           "icebergQuantity": 1,
-           "limitPrice": 57.58,
-           "isAllOrNone": True,
-           "isAnonymous": False,
-           "orderType": "Limit",
-           "timeInForce": "GoodTillCanceled",
-           "action": "Buy",
-           "primaryRoute": "AUTO",
-           "secondaryRoute": "AUTO"
-        }``
-
-        Note that currently only partner apps can submit orders to the Questrade API.
+        ``{'accountNumber': 1234567,
+        'symbolId': 3925293,
+        'quantity': 1,
+        'icebergQuantity': 1,
+        'limitPrice': 57.58,
+        'isAllOrNone': True,
+        'isAnonymous': False,
+        'orderType': 'Limit',
+        'timeInForce': 'GoodTillCanceled',
+        'action': 'Buy',
+        'primaryRoute': 'AUTO',
+        'secondaryRoute': 'AUTO'}``
 
         Parameters
         ----------
