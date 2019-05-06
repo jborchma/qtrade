@@ -3,21 +3,19 @@ dist: trusty
 sudo: false
 cache:
   pip: true
-
-python:
-  - "3.6"
-install:
-  - pip install -r requirements.txt
-script:
-  - python -m pytest
-
 env:
   global:
     # Doctr deploy key for jborchma/qtrade
     - secure: "ebYlAc5fSScs0M4Bgye3VFaShp+8HPtAGnbSbm4VkJFkAaTuPGJXNEGbps1SY35IaCcTij+YXzoqGW6uQ52Sb+on4CFkqpYdV11za1JZsfWHn0YYJz6lTIWPIeKmct+GjPkn08vjQDff0kIuS+lA9Cm0tMdpwhXAuRiQ9jBjLiBiGMfEPcpDF83DtOaPg85xfjmhNF08pzzfhaW0/wnJjO1WIwb+BZXGEwmiCYCwUIaboSjBawLRMQi9AFppBq84YJSnDdAiDW8f0+mBj6p1flWSAoCGG1q/UFzRv5Ug0TBwes0lsBG9rMDVV+uqoH10uLnz2RjgKB1qi8TmHaXCLrgG1rytiJ/aD2Z1qyB7GzpeGwTDQMsiCT1QalUtVNYa/UZhMGQXj02zmsUT/Oo6CzLO/PIV2H/8zIfHDR0na4eIRxYo4nwos3IcnX5zypHTDW9uDPDRSHEQ7Fs9JjOgDZukpEd3Cz7B2DqazJDrHMP2WQiHbxpLxm4Hu7Cl+kiJZLE6xbUy1PFKEpnKomIP6NcFFbvkNZnGLQAcAEkMtdlX6sIpujinqfFkA4f3tcT4qMTeJpYoSHbBd1FRtBLST5X71lRtKCtp4Ndmli53Pcgk/psvkbBfYleFfd6SIB5KwcSDAsl+tQLHZuzZEpKMrTAqZGFtQBwuNT4vCHvPbek="
-
+python:
+  - 3.6
+install:
+  - pip install -r requirements.txt
 script:
+  - python -m pytest
   - set -e
   - make html
   - pip install doctr
   - doctr deploy --built-docs build .
+doctr:
+  require-master: true
