@@ -1,14 +1,19 @@
-.. Qtrade documentation master file, created by
-   sphinx-quickstart on Sun May  5 11:19:14 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to Qtrade's documentation!
 ==================================
 
+Contents:
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Introduction:
+
+   readme
+
+.. toctree::
+  :maxdepth: 4
+  :caption: API Reference
+
+  api/modules
 
 
 
