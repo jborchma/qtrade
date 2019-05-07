@@ -17,6 +17,6 @@ script:
   - set -e
   - make html
   - pip install doctr
-  - doctr deploy --built-docs build .
+  - doctr deploy --built-docs html .
 doctr:
   require-master: true
