@@ -16,6 +16,7 @@ setup(
     version=__version__,
     description="Questrade API wrapper for Python",
     long_description=LONG_DESCRIPTION,
+    long_description_content_type='text/markdown',
     url="https://github.com/jborchma/qtrade",
     license="MIT",
     packages=find_packages(),
