@@ -22,7 +22,7 @@ def get_access_token_yaml(token_yaml):
     try:
         with open(token_yaml) as yaml_file:
             log.debug("Loading access token from yaml...")
-            token_yaml = yaml.load(yaml_file)
+            token_yaml = yaml.load(yaml_file, Loader=yaml.FullLoader)
     except Exception:
         log.error("Error loading access token from yaml...")
         raise
