@@ -89,14 +89,15 @@ class Questrade():
             log.debug("Saving access token to yaml file...")
             yaml.dump(self.access_token, yaml_file)
 
-    def get_access_token(self, save_yaml=True, yaml_path="access_token.yml"):
+    def get_access_token(self, save_yaml=False, yaml_path="access_token.yml"):
         """
-        This method gets the access token from the access code and saves it in access_token.yaml.
+        This method gets the access token from the access code and optionally saves it in
+        access_token.yaml.
 
         Parameters
         ----------
         save_yaml: bool, optional
-            Boolean to indicate if the token payload will be saved in a yaml-file. Default True.
+            Boolean to indicate if the token payload will be saved in a yaml-file. Default False.
         yaml_path: str, optional
             Path of the yaml-file that will be saved. If the file already exists, it will be
             overwritten. Defaults to access_token.yml
