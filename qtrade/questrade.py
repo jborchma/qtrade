@@ -17,9 +17,18 @@ class Questrade():
     This class holds the methods to get access tokens, refresh access tokens as well as get
     stock quotes and portfolio overview. An instance of the class needs to be either initialized
     with an access_code or the path of a access token yaml file.
+
+    Parameters
+    ----------
+    access_code: str, optional
+        Access code from Questrade
+    token_yaml: str, optional
+        Path of the yaml-file holding the token payload
+    save_yaml: bool, optional
+        Boolean to indicate if the token payload will be saved in a yaml-file. Default True.
     """
 
-    def __init__(self, access_code=None, token_yaml=None):
+    def __init__(self, access_code=None, token_yaml=None, save_yaml=True):
 
         self.access_token = None
         self.headers = None
@@ -35,7 +44,7 @@ class Questrade():
             # add headers to session
             self.session.headers.update(self.headers)
         else:
-            self.get_access_token()
+            self.get_access_token(save_yaml=save_yaml)
 
         self.account_id = None
         self.positions = None
@@ -67,9 +76,31 @@ class Questrade():
         resp.raise_for_status()
         return resp.json()
 
-    def get_access_token(self):
+    def save_token_to_yaml(self, yaml_path="access_token.yml"):
+        """This method saves the token payload as a yaml-file
+
+        Parameters
+        ----------
+        yaml_path: str, optional
+            Path of the yaml-file. If the file already exists, it will be overwritten. Defaults to
+            access_token.yml
         """
-        This method gets the access token from the access code and saves it in access_token.yaml.
+        with open(yaml_path, 'w') as yaml_file:
+            log.debug("Saving access token to yaml file...")
+            yaml.dump(self.access_token, yaml_file)
+
+    def get_access_token(self, save_yaml=False, yaml_path="access_token.yml"):
+        """
+        This method gets the access token from the access code and optionally saves it in
+        access_token.yaml.
+
+        Parameters
+        ----------
+        save_yaml: bool, optional
+            Boolean to indicate if the token payload will be saved in a yaml-file. Default False.
+        yaml_path: str, optional
+            Path of the yaml-file that will be saved. If the file already exists, it will be
+            overwritten. Defaults to access_token.yml
 
         Returns
         -------
@@ -100,23 +131,26 @@ class Questrade():
         self.session.headers.update(self.headers)
 
         # save access token
-        with open('access_token.yml', 'w') as yaml_file:
-            log.debug("Saving access token to yaml file...")
-            yaml.dump(self.access_token, yaml_file)
+        if save_yaml:
+            log.info("Saving yaml file to {}...".format(yaml_path)) #pylint: disable=W1202
+            self.save_token_to_yaml(yaml_path=yaml_path)
 
         return self.access_token
 
-
-    def refresh_access_token(self, from_yaml=True):
+    def refresh_access_token(self, from_yaml=False, yaml_path="access_token.yml"):
         """
-        This method refreshes the access token saved in access_token.yml. This only works if the
-        overall access has not yet expired.
+        This method refreshes the access token. This only works if the overall access has not yet
+        expired. By default it will look for the yaml-file, but it could also look for the internal
+        state
 
         Parameters
         ----------
-        from_yaml: bool, optional [True]
-            This parameter controls if the refresh token is sourced from a yaml file (default)
-            or if the attribute `access_token` is used.
+        from_yaml: bool, optional [False]
+            This parameter controls if the refresh token is sourced from a yaml file
+            or if the attribute `access_token` is used (default). If True, the yaml-file will be
+            updated.
+        yaml_path: str, optional
+            Path of the yaml-file that will be updated. Defaults to access_token.yml
 
         Returns
         -------
@@ -152,9 +186,8 @@ class Questrade():
         self.session.headers.update(self.headers)
 
         # save access token
-        with open('access_token.yml', 'w') as yaml_file:
-            log.debug("Saving access token to yaml file...")
-            yaml.dump(self.access_token, yaml_file)
+        if from_yaml:
+            self.save_token_to_yaml(yaml_path=yaml_path)
 
         return self.access_token
 
