@@ -18,7 +18,7 @@ the command
 Usage
 -----
 
-The main class of the package is called `Questrade` and houses most of the functionality provided
+The main class of the package is called ``Questrade`` and houses most of the functionality provided
 by the package. Below are a few examples for possible use cases.
 
 Token management
@@ -96,7 +96,7 @@ In addition, one can get historical stock quotes via
 
   aapl_history = = qtrade.get_historical_data('AAPL', '2018-08-01', '2018-08-21','OneHour')
 
-Here, the last input parameter is the interval between quotes. Another option could be `'OneDay'`.
+Here, the last input parameter is the interval between quotes. Another option could be ``'OneDay'``.
 For more options, see the `Questrade API description <http://www.questrade.com/api/documentation/rest-operations/enumerations/enumerations#historical-data-granularity`_.
 
 Account information
@@ -115,7 +115,7 @@ By using the correct account ID, one can get the positions of the accounts via
 
   positions = qtrade.get_account_positions(account_id=123456)
 
-Finally, there exists a method to get all account activities (trades, dividends recieved, etc.) of
+Finally, there exists a method to get all account activities (trades, dividends received, etc.) of
 an account in a certain time frame via
 
 .. code:: python
@@ -125,4 +125,4 @@ an account in a certain time frame via
 Contributors
 ------------
 
-There is a test suite that can be run via `python -m pytest`.
+There is a test suite that can be run via ``python -m pytest``.
