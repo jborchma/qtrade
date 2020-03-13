@@ -33,8 +33,8 @@ The central class can be initialized via
   qtrade = Questrade(access_code='<access_code>')
   qtrade.get_access_token()
 
-where `<access_code>` is the token that one gets from the Questrade API portal. It is called
-`access_code` since this initial token is used to get the full token data that will include
+where ``<access_code>`` is the token that one gets from the Questrade API portal. It is called
+``access_code`` since this initial token is used to get the full token data that will include
 
 .. code:: python
 
@@ -125,4 +125,15 @@ an account in a certain time frame via
 Contributors
 ------------
 
-There is a test suite that can be run via ``python -m pytest``.
+Contributions are always appreciated! For example:
+
+- open an issue for a missing feature or a bug
+- give feedback about existing functionality
+- make suggestions for improvements
+- submit a PR with a new feature (though reaching out would be appreciated)
+- etc.
+
+There is a test suite that can be run via ``python -m pytest``. This project uses ``pre-commit``
+and ``black`` which takes care of automatic code formatting and linting. When setting up the development
+environment, run ``pre-commit install`` to set up the hook. This will run black automatically when
+committing code changes.

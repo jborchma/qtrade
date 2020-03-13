@@ -3,7 +3,7 @@
 import logging
 import yaml
 
-log = logging.getLogger(__name__) #pylint: disable=C0103
+log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
 def get_access_token_yaml(token_yaml):
@@ -30,8 +30,14 @@ def get_access_token_yaml(token_yaml):
     validate_access_token(**token_yaml)
     return token_yaml
 
-def validate_access_token(access_token=None, api_server=None, expires_in=None,
-                          refresh_token=None, token_type=None):
+
+def validate_access_token(
+    access_token=None,
+    api_server=None,
+    expires_in=None,
+    refresh_token=None,
+    token_type=None,
+):
     """Validate access token
 
     This function validates the access token and ensures that all requiered
@@ -57,12 +63,12 @@ def validate_access_token(access_token=None, api_server=None, expires_in=None,
     """
     log.debug("Validating access token...")
     if access_token is None:
-        raise Exception('Access token was not provided.')
+        raise Exception("Access token was not provided.")
     if api_server is None:
-        raise Exception('API server URL was not provided.')
+        raise Exception("API server URL was not provided.")
     if expires_in is None:
-        raise Exception('Expiry time was not provided.')
+        raise Exception("Expiry time was not provided.")
     if refresh_token is None:
-        raise Exception('Refresh token was not provided.')
+        raise Exception("Refresh token was not provided.")
     if token_type is None:
-        raise Exception('Token type was not provided.')
+        raise Exception("Token type was not provided.")
