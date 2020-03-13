@@ -125,4 +125,6 @@ an account in a certain time frame via
 Contributors
 ------------
 
-There is a test suite that can be run via ``python -m pytest``.
+There is a test suite that can be run via ``python -m pytest``. This project uses ``pre-commit``
+and black which takes care of automatic code formatting and linting. When setting up the development
+environment, run ``pre-commit install`` to set up the hook.
