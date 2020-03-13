@@ -14,7 +14,7 @@ pip install qtrade
 
 ## Usage
 
-The main class of the package is called `Questrade` and houses most of the functionality provided by the package. Below are a few examples for possible use cases.
+For an overview of the package API, please take a look at the [docs](https://jborchma.github.io/qtrade/). The main class of the package is called `Questrade` and houses most of the functionality provided by the package. Below are a few examples for possible use cases.
 
 ### Token management
 
@@ -99,7 +99,7 @@ By using the correct account ID, one can get the positions of the accounts via
 positions = qtrade.get_account_positions(account_id=123456)
 ```
 
-Finally, there exists a method to get all account activities (trades, dividends recieved, etc.) of
+Finally, there exists a method to get all account activities (trades, dividends received, etc.) of
 an account in a certain time frame via
 
 ```python
