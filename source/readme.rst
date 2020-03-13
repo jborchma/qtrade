@@ -33,8 +33,8 @@ The central class can be initialized via
   qtrade = Questrade(access_code='<access_code>')
   qtrade.get_access_token()
 
-where `<access_code>` is the token that one gets from the Questrade API portal. It is called
-`access_code` since this initial token is used to get the full token data that will include
+where ``<access_code>`` is the token that one gets from the Questrade API portal. It is called
+``access_code`` since this initial token is used to get the full token data that will include
 
 .. code:: python
 
