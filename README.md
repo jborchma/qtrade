@@ -53,9 +53,9 @@ token_type: Bearer
 
 If the token is expired, one can use
 ```python
-qtrade.refresh_token()
+qtrade.refresh_access_token(from_yaml=True)
 ```
-to refresh the access token using the saved refresh token.
+to refresh the access token using the saved refresh token. 
 
 Once the tokens are set correctly, I have currently added methods to get ticker quotes, the
 current status of all positions in any Questrade account that is associated with the tokens,
