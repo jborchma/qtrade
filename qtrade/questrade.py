@@ -50,7 +50,7 @@ class Questrade:
             # add headers to session
             self.session.headers.update(self.headers)
         else:
-            self.get_access_token(save_yaml=save_yaml)
+            self._get_access_token(save_yaml=save_yaml)
 
         self.account_id = None
         self.positions = None
@@ -98,9 +98,9 @@ class Questrade:
             log.debug("Saving access token to yaml file...")
             yaml.dump(self.access_token, yaml_file)
 
-    def get_access_token(self, save_yaml=False, yaml_path="access_token.yml"):
+    def _get_access_token(self, save_yaml=False, yaml_path="access_token.yml"):
         """
-        This method gets the access token from the access code and optionally saves it in
+        This internal method gets the access token from the access code and optionally saves it in
         access_token.yaml.
 
         Parameters

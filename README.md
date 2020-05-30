@@ -24,7 +24,6 @@ The central class can be initialized via
 from qtrade import Questrade
 
 qtrade = Questrade(access_code='<access_code>')
-qtrade.get_access_token()
 ```
 where `<access_code>` is the token that one gets from the Questrade API portal. It is called
 `access_code` since this initial token is used to get the full token data that will include
@@ -55,7 +54,7 @@ If the token is expired, one can use
 ```python
 qtrade.refresh_access_token(from_yaml=True)
 ```
-to refresh the access token using the saved refresh token. 
+to refresh the access token using the saved refresh token.
 
 Once the tokens are set correctly, I have currently added methods to get ticker quotes, the
 current status of all positions in any Questrade account that is associated with the tokens,
