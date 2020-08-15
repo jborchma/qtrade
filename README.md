@@ -118,5 +118,9 @@ Contributions are always appreciated! For example:
 
 There is a test suite that can be run via `python -m pytest`. This project uses `pre-commit`
 and `black` which takes care of automatic code formatting and linting. When setting up the development
-environment, run `pre-commit instal`` to set up the hook. This will run black automatically when
+environment, run `pre-commit install` to set up the hook. This will run black automatically when
 committing code changes.
+
+## Disclaimer
+
+I am in no way affiliated with Questrade and using this API wrapper is licensed via the MIT license.
