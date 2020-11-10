@@ -1,6 +1,7 @@
 """Collection of utility functions
 """
 import logging
+
 import yaml
 
 log = logging.getLogger(__name__)  # pylint: disable=C0103

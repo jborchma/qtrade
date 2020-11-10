@@ -2,6 +2,7 @@
 """
 
 import logging
+
 import requests
 import yaml
 
