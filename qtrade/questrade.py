@@ -1,11 +1,12 @@
 """Core module for Questrade API wrapper."""
 
 import logging
+from typing import Any, Dict, List, Optional, Union
 
 import requests
 import yaml
 
-from .utility import get_access_token_yaml, validate_access_token
+from .utility import TokenDict, get_access_token_yaml, validate_access_token
 
 log = logging.getLogger(__name__)  # pylint: disable=C0103
 
@@ -29,16 +30,21 @@ class Questrade:
         Boolean to indicate if the token payload will be saved in a yaml-file. Default True.
     """
 
-    def __init__(self, access_code=None, token_yaml=None, save_yaml=True):
+    def __init__(
+        self,
+        access_code: Optional[str] = None,
+        token_yaml: Optional[str] = None,
+        save_yaml: bool = True,
+    ):
 
-        self.access_token = None
+        self.access_token: TokenDict
         self.headers = None
         self.session = requests.Session()
 
         self.access_code = access_code
         self.token_yaml = token_yaml
 
-        if access_code is None:
+        if access_code is None and self.token_yaml is not None:
             self.access_token = get_access_token_yaml(self.token_yaml)
             self.headers = {
                 "Authorization": self.access_token["token_type"]
@@ -54,8 +60,13 @@ class Questrade:
         self.positions = None
 
     def _send_message(
-        self, method, endpoint, params=None, data=None, json=None
-    ):  # pylint: disable=R0913
+        self,
+        method: str,
+        endpoint: str,
+        params: Optional[Dict] = None,
+        data: Optional[Dict] = None,
+        json: Optional[Dict] = None,
+    ) -> Dict[str, Any]:  # pylint: disable=R0913
         """Send an API request.
 
         Parameters
@@ -76,12 +87,16 @@ class Questrade:
         dict/list:
             JSON response
         """
-        url = self.access_token["api_server"] + "/v1/" + endpoint
+        if self.access_token is not None:
+            url = self.access_token["api_server"] + "/v1/" + endpoint
+        else:
+            log.error("Access token not set...")
+            raise Exception("Access token not set...")
         resp = self.session.request(method, url, params=params, data=data, json=json, timeout=30)
         resp.raise_for_status()
         return resp.json()
 
-    def save_token_to_yaml(self, yaml_path="access_token.yml"):
+    def save_token_to_yaml(self, yaml_path: str = "access_token.yml"):
         """Save the token payload as a yaml-file.
 
         Parameters
@@ -94,7 +109,9 @@ class Questrade:
             log.debug("Saving access token to yaml file...")
             yaml.dump(self.access_token, yaml_file)
 
-    def _get_access_token(self, save_yaml=False, yaml_path="access_token.yml"):
+    def _get_access_token(
+        self, save_yaml: bool = False, yaml_path: str = "access_token.yml"
+    ) -> TokenDict:
         """Get access token.
 
         This internal method gets the access token from the access code and optionally saves it in
@@ -145,7 +162,9 @@ class Questrade:
 
         return self.access_token
 
-    def refresh_access_token(self, from_yaml=False, yaml_path="access_token.yml"):
+    def refresh_access_token(
+        self, from_yaml: bool = False, yaml_path: str = "access_token.yml"
+    ) -> TokenDict:
         """Refresh access token.
 
         This method refreshes the access token. This only works if the overall access has not yet
@@ -203,7 +222,7 @@ class Questrade:
 
         return self.access_token
 
-    def get_account_id(self):
+    def get_account_id(self) -> List[int]:
         """Get account ID.
 
         This method gets the accounts ID connected to the token.
@@ -214,21 +233,21 @@ class Questrade:
             List of account IDs.
         """
         log.info("Getting account ID...")
-        response = self._send_message("get", "accounts")
+        response: Dict[str, List[Dict[str, int]]] = self._send_message("get", "accounts")
 
         account_id = []
         try:
             for account in response["accounts"]:
                 account_id.append(account["number"])
         except Exception:
-            print(response)
+            log.error(response)
             raise Exception
 
-        self.account_id = account_id
+        self.account_id = account_id  # type: ignore
 
         return account_id
 
-    def get_account_positions(self, account_id):
+    def get_account_positions(self, account_id: int) -> List[Dict]:
         """Get account positions.
 
         This method will get the positions for the account ID connected to the token.
@@ -274,7 +293,7 @@ class Questrade:
 
         return positions
 
-    def get_account_activities(self, account_id, start_date, end_date):
+    def get_account_activities(self, account_id: int, start_date: str, end_date: str) -> List[Dict]:
         """Get account activities.
 
         This method will get the account activities for a given account ID in a given time
@@ -332,7 +351,7 @@ class Questrade:
 
         return activities
 
-    def ticker_information(self, tickers):
+    def ticker_information(self, tickers: Union[str, List[str]]) -> Union[Dict, List[Dict]]:
         """Get ticker information.
 
         This function gets information such as a quote for a single ticker or a list of tickers.
@@ -365,7 +384,7 @@ class Questrade:
 
         return symbols
 
-    def get_quote(self, tickers):
+    def get_quote(self, tickers: List[str]) -> Union[Dict, List[Dict]]:
         """Get quote.
 
         This function gets information such as a quote for a single ticker or a list of tickers.
@@ -385,7 +404,7 @@ class Questrade:
 
         # translate tickers to IDs
         info = self.ticker_information(tickers)
-        if len(tickers) == 1:
+        if len(tickers) == 1 and isinstance(info, dict):
             ids = [info["symbolId"]]
         else:
             ids = [stock["symbolId"] for stock in info]
@@ -405,7 +424,9 @@ class Questrade:
 
         return quotes
 
-    def get_historical_data(self, ticker, start_date, end_date, interval):
+    def get_historical_data(
+        self, ticker: str, start_date: str, end_date: str, interval: str
+    ) -> List:
         """Get historical ticker data.
 
         This method get gets historical data for a time interval and a defined time frequency.
@@ -428,7 +449,11 @@ class Questrade:
         """
         # translate tickers to IDs
         info = self.ticker_information(ticker)
-        ids = info["symbolId"]
+        if isinstance(info, dict):
+            ids = info["symbolId"]
+        else:
+            log.error(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
+            raise Exception(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
         payload = {
             "startTime": str(start_date) + "T00:00:00-05:00",
             "endTime": str(end_date) + "T00:00:00-05:00",
@@ -448,7 +473,7 @@ class Questrade:
 
         return quotes
 
-    def submit_order(self, acct_id, order_dict):
+    def submit_order(self, acct_id: int, order_dict: Dict[str, Union[int, bool, str]]) -> Dict:
         """Submit order.
 
         This method submits an order to Questrade. Note that currently only partner apps can submit
