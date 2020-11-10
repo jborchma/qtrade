@@ -5,9 +5,14 @@ cache:
   pip: true
 python:
   - 3.6
+  - 3.7
+  - 3.8
 install:
   - pip install -r requirements-dev.txt
 script:
   - python setup.py install
-  - python -m pytest
+  - python -m pytest --cov=qtrade
   - python -m mypy qtrade
+
+after_success:
+  - codecov # submit coverage
