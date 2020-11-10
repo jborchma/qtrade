@@ -7,4 +7,4 @@ PyYAML>=5.1
 requests>=2.14.2
 sphinx>=2.0.1
 sphinx-rtd-theme>=0.4.2
-typing-extensions;python_version<=3.7
+typing-extensions; python_version<='3.7'
