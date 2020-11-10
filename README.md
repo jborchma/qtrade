@@ -2,7 +2,7 @@
 
 # Qtrade
 
-This is a very basic Python 3 wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
+This is a very basic Python 3.6+ wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
 
 ## Installation
 
@@ -117,8 +117,8 @@ Contributions are always appreciated! For example:
 - etc.
 
 There is a test suite that can be run via `python -m pytest`. This project uses `pre-commit`
-and `black` which takes care of automatic code formatting and linting. When setting up the development
-environment, run `pre-commit install` to set up the hook. This will run black automatically when
+and `black`, `flake8` and `isort` which takes care of automatic code formatting and linting. When setting up the development
+environment, run `pre-commit install` to set up the hook. This will run all the linting automatically when
 committing code changes.
 
 ## Disclaimer

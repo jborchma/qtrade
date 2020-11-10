@@ -1,12 +1,33 @@
 """Collection of utility functions."""
 import logging
+import sys
+from typing import Optional
 
 import yaml
 
+if sys.version_info < (3, 8, 0):
+    from typing_extensions import TypedDict
+else:
+    from typing import (
+        TypedDict,  # type: ignore  ## needed to do this for mypy error in python < 3.8
+    )
+
+
 log = logging.getLogger(__name__)  # pylint: disable=C0103
 
+TokenDict = TypedDict(
+    "TokenDict",
+    {
+        "access_token": str,
+        "api_server": str,
+        "expires_in": int,
+        "refresh_token": str,
+        "token_type": str,
+    },
+)
 
-def get_access_token_yaml(token_yaml):
+
+def get_access_token_yaml(token_yaml: str) -> TokenDict:
     """Read in access token yaml.
 
     Parameters
@@ -22,17 +43,21 @@ def get_access_token_yaml(token_yaml):
     try:
         with open(token_yaml) as yaml_file:
             log.debug("Loading access token from yaml...")
-            token_yaml = yaml.load(yaml_file, Loader=yaml.FullLoader)
+            token_yaml_payload: TokenDict = yaml.load(yaml_file, Loader=yaml.FullLoader)
     except Exception:
         log.error("Error loading access token from yaml...")
         raise
 
-    validate_access_token(**token_yaml)
-    return token_yaml
+    validate_access_token(**token_yaml_payload)
+    return token_yaml_payload
 
 
 def validate_access_token(
-    access_token=None, api_server=None, expires_in=None, refresh_token=None, token_type=None
+    access_token: Optional[str] = None,
+    api_server: Optional[str] = None,
+    expires_in: Optional[int] = None,
+    refresh_token: Optional[str] = None,
+    token_type: Optional[str] = None,
 ):
     """Validate access token.
 
