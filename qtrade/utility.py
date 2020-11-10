@@ -1,5 +1,4 @@
-"""Collection of utility functions
-"""
+"""Collection of utility functions."""
 import logging
 
 import yaml
@@ -8,7 +7,7 @@ log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
 def get_access_token_yaml(token_yaml):
-    """Utility function to read in access token yaml
+    """Read in access token yaml.
 
     Parameters
     ----------
@@ -33,13 +32,9 @@ def get_access_token_yaml(token_yaml):
 
 
 def validate_access_token(
-    access_token=None,
-    api_server=None,
-    expires_in=None,
-    refresh_token=None,
-    token_type=None,
+    access_token=None, api_server=None, expires_in=None, refresh_token=None, token_type=None
 ):
-    """Validate access token
+    """Validate access token.
 
     This function validates the access token and ensures that all requiered
     attributes are provided.
