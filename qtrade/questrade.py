@@ -514,44 +514,7 @@ class Questrade:
 
         return response
 
-    def lookup_symbol_by_name(self, symbolPrefix: str) -> List:
-        """Lookup symbol metadata by name. Can return 0, 1, or multiple dictionaries.
-
-           See https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-search
-
-           This method will return a dictionary of the form
-
-           ``[
-               {
-                 "symbol": "BMO",
-                 "symbolId": 9292,
-                 "description": "BANK OF MONTREAL",
-                 "securityType": "Stock",
-                 "listingExchange": "NYSE",
-                 "isTradable": true,
-                 "isQuotable": true,
-                 "currency": "USD"
-               }
-             ]``
-
-            Parameters
-            ----------
-            symbolPrefix: str
-                Symbol search prefix
-
-            Returns
-            -------
-            list:
-                List of dictionaries containing symbol metadata.
-            """
-        payload = {
-            "prefix": symbolPrefix,
-        }
-        log.info("Searching for symbol prefix {0} ...".format(symbolPrefix))
-        response = self._send_message("get", "symbols/search", params=payload)
-        return response
-
-    def get_option_chain(self, symbolId: int) -> Dict:
+    def get_option_chain(self, ticker: str) -> Dict:
         """Retrieves an option chain for a particular underlying symbol.
 
             See https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options
@@ -591,15 +554,19 @@ class Questrade:
 
             Parameters
             ----------
-            symbolId int
-                Internal option symbol ID
+            ticker str
+                Ticker symbol
 
             Returns
             -------
             dict:
                 Dictionary of option chain information for a particular symbol.
             """
-        log.info("Getting option chain for symbol {0} ...".format(symbolId))
+        log.info(f"Getting option chain for ticker {ticker} ...")
+        info = self.ticker_information([ticker])
+        if not isinstance(info, dict):
+            raise Exception(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
+        symbolId = info["symbolId"]
         response = self._send_message(
             "get", "symbols/" + str(symbolId) + "/options")
         return response
