@@ -255,18 +255,20 @@ class Questrade:
         The returned data is a list where for each position, a dictionary with the following
         data will be returned:
 
-        ``{'averageEntryPrice': 1000,
-        'closedPnl': 0,
-        'closedQuantity': 0,
-        'currentMarketValue': 3120,
-        'currentPrice': 1040,
-        'isRealTime': False,
-        'isUnderReorg': False,
-        'openPnl': 120,
-        'openQuantity': 3,
-        'symbol': 'XYZ',
-        'symbolId': 1234567,
-        'totalCost': 3000}``
+        .. code-block:: python
+
+            {'averageEntryPrice': 1000,
+            'closedPnl': 0,
+            'closedQuantity': 0,
+            'currentMarketValue': 3120,
+            'currentPrice': 1040,
+            'isRealTime': False,
+            'isUnderReorg': False,
+            'openPnl': 120,
+            'openQuantity': 3,
+            'symbol': 'XYZ',
+            'symbolId': 1234567,
+            'totalCost': 3000}
 
 
         Parameters
@@ -302,20 +304,22 @@ class Questrade:
         This method will in general return a list of dictionaries, where each dictionary represents
         one trade/account activity. Each dictionary is of the form
 
-        ``{'action': 'Buy',
-        'commission': -5.01,
-        'currency': 'CAD',
-        'description': 'description text',
-        'grossAmount': -1000,
-        'netAmount': -1005.01,
-        'price': 10,
-        'quantity': 100,
-        'settlementDate': '2018-08-09T00:00:00.000000-04:00',
-        'symbol': 'XYZ.TO',
-        'symbolId': 1234567,
-        'tradeDate': '2018-08-07T00:00:00.000000-04:00',
-        'transactionDate': '2018-08-09T00:00:00.000000-04:00',
-        'type': 'Trades'}``
+        .. code-block:: python
+
+            {'action': 'Buy',
+            'commission': -5.01,
+            'currency': 'CAD',
+            'description': 'description text',
+            'grossAmount': -1000,
+            'netAmount': -1005.01,
+            'price': 10,
+            'quantity': 100,
+            'settlementDate': '2018-08-09T00:00:00.000000-04:00',
+            'symbol': 'XYZ.TO',
+            'symbolId': 1234567,
+            'tradeDate': '2018-08-07T00:00:00.000000-04:00',
+            'transactionDate': '2018-08-09T00:00:00.000000-04:00',
+            'type': 'Trades'}
 
         Parameters
         ----------
@@ -479,18 +483,20 @@ class Questrade:
         This method submits an order to Questrade. Note that currently only partner apps can submit
         orders to the Questrade API. The order information is provided in a dictionary of the form
 
-        ``{'accountNumber': 1234567,
-        'symbolId': 3925293,
-        'quantity': 1,
-        'icebergQuantity': 1,
-        'limitPrice': 57.58,
-        'isAllOrNone': True,
-        'isAnonymous': False,
-        'orderType': 'Limit',
-        'timeInForce': 'GoodTillCanceled',
-        'action': 'Buy',
-        'primaryRoute': 'AUTO',
-        'secondaryRoute': 'AUTO'}``
+        .. code-block:: python
+
+            {'accountNumber': 1234567,
+            'symbolId': 3925293,
+            'quantity': 1,
+            'icebergQuantity': 1,
+            'limitPrice': 57.58,
+            'isAllOrNone': True,
+            'isAnonymous': False,
+            'orderType': 'Limit',
+            'timeInForce': 'GoodTillCanceled',
+            'action': 'Buy',
+            'primaryRoute': 'AUTO',
+            'secondaryRoute': 'AUTO'}
 
         Parameters
         ----------
@@ -521,36 +527,38 @@ class Questrade:
 
         This method will return a dictionary of the form
 
-        ``{
-            "options": [
+        .. code-block:: python
+
             {
-              "expiryDate": "2015-01-17T00:00:00.000000-05:00",
-              "description": "BANK OF MONTREAL",
-              "listingExchange": "MX",
-              "optionExerciseType": "American",
-              "chainPerRoot": [
-              {
-                "root": "BMO",
-                "chainPerStrikePrice": [
+                "options": [
                 {
-                  "strikePrice": 60,
-                  "callSymbolId": 6101993,
-                  "putSymbolId": 6102009
-                },
-                {
-                  "strikePrice": 62,
-                  "callSymbolId": 6101994,
-                  "putSymbolId": 6102010
-                },
-                {
-                  "strikePrice": 64,
-                  "callSymbolId": 6101995,
-                  "putSymbolId": 6102011
-                }],
-                "multiplier": 100
-              }]
-            }]
-          }``
+                  "expiryDate": "2015-01-17T00:00:00.000000-05:00",
+                  "description": "BANK OF MONTREAL",
+                  "listingExchange": "MX",
+                  "optionExerciseType": "American",
+                  "chainPerRoot": [
+                  {
+                    "root": "BMO",
+                    "chainPerStrikePrice": [
+                    {
+                      "strikePrice": 60,
+                      "callSymbolId": 6101993,
+                      "putSymbolId": 6102009
+                    },
+                    {
+                      "strikePrice": 62,
+                      "callSymbolId": 6101994,
+                      "putSymbolId": 6102010
+                    },
+                    {
+                      "strikePrice": 64,
+                      "callSymbolId": 6101995,
+                      "putSymbolId": 6102011
+                    }],
+                    "multiplier": 100
+                  }]
+                }]
+            }
 
         Parameters
         ----------
@@ -578,54 +586,57 @@ class Questrade:
 
         This method will return a dictionary of the form
 
-        ``{
-            "optionQuotes": [
-                {
-                    "underlying": "MSFT",
-                    "underlyingId": 27426,
-                    "symbol": "MSFT20Jan17C70.00",
-                    "symbolId": 7413503,
-                    "bidPrice": 4.90,
-                    "bidSize": 0,
-                    "askPrice": 4.95,
-                    "askSize": 0,
-                    "lastTradePriceTrHrs": 4.93,
-                    "lastTradePrice": 4.93,
-                    "lastTradeSize": 0,
-                    "lastTradeTick": "Equal",
-                    "lastTradeTime": "2015-08-17T00:00:00.000000-04:00",
-                    "volume": 0,
-                    "openPrice": 0,
-                    "highPricehighPrice": 4.93,
-                    "lowPrice": 0,
-                    "volatility": 52.374257,
-                    "delta": 0.06985,
-                    "gamma": 0.01038,
-                    "theta": -0.001406,
-                    "vega": 0.074554,
-                    "rho": 0.04153,
-                    "openInterest": 2292,
-                    "delay": 0,
-                    "isHalted": False,
-                    "VWAP": 0,
-                }
-            ]
-        }``
+        .. code-block:: python
+
+            {"optionQuotes": [
+                    {
+                        "underlying": "MSFT",
+                        "underlyingId": 27426,
+                        "symbol": "MSFT20Jan17C70.00",
+                        "symbolId": 7413503,
+                        "bidPrice": 4.90,
+                        "bidSize": 0,
+                        "askPrice": 4.95,
+                        "askSize": 0,
+                        "lastTradePriceTrHrs": 4.93,
+                        "lastTradePrice": 4.93,
+                        "lastTradeSize": 0,
+                        "lastTradeTick": "Equal",
+                        "lastTradeTime": "2015-08-17T00:00:00.000000-04:00",
+                        "volume": 0,
+                        "openPrice": 0,
+                        "highPricehighPrice": 4.93,
+                        "lowPrice": 0,
+                        "volatility": 52.374257,
+                        "delta": 0.06985,
+                        "gamma": 0.01038,
+                        "theta": -0.001406,
+                        "vega": 0.074554,
+                        "rho": 0.04153,
+                        "openInterest": 2292,
+                        "delay": 0,
+                        "isHalted": False,
+                        "VWAP": 0,
+                    }
+                ]
+            }
 
         Parameters
         ----------
         filters: List of dictionaries
             List of filters. For example
 
-            ``[
-                 {
-                   "optionType": "Call",
-                   "underlyingId": 27426,
-                   "expiryDate": "2017-01-20T00:00:00.000000-05:00",
-                   "minstrikePrice": 70,
-                   "maxstrikePrice": 80
+        .. code-block:: python
+
+            [
+                {
+                 "optionType": "Call",
+                 "underlyingId": 27426,
+                 "expiryDate": "2017-01-20T00:00:00.000000-05:00",
+                 "minstrikePrice": 70,
+                 "maxstrikePrice": 80
                  }
-             ]``
+             ]
 
          option_ids: [int]
              List of option IDs
