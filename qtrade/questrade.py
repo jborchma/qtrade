@@ -554,7 +554,7 @@ class Questrade:
 
         Parameters
         ----------
-        ticker str
+        ticker: str
             Ticker symbol
 
         Returns
@@ -566,11 +566,11 @@ class Questrade:
         info = self.ticker_information([ticker])
         if not isinstance(info, dict):
             raise Exception(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
-        symbolId = info["symbolId"]
-        response = self._send_message("get", "symbols/" + str(symbolId) + "/options")
+        symbol_id = info["symbolId"]
+        response = self._send_message("get", "symbols/" + str(symbol_id) + "/options")
         return response
 
-    def get_option_quotes(self, filters: List, optionIds: List) -> Dict:
+    def get_option_quotes(self, filters: List[Dict], option_ids: List[int]) -> Dict:
         """Retrieve a single Level 1 market quote and Greek data for one or more option symbols.
 
         www.questrade.com/api/documentation/rest-operations/market-calls/markets-quotes-options
@@ -613,7 +613,7 @@ class Questrade:
 
         Parameters
         ----------
-        filters List
+        filters: List of dictionaries
             List of filters. For example
 
             ``[
@@ -626,7 +626,7 @@ class Questrade:
                  }
              ]``
 
-         optionIds List
+         option_ids: [int]
              List of option IDs
 
         Returns
@@ -635,12 +635,14 @@ class Questrade:
              Dictionary of option quotes.
         """
         log.info(
-            "Getting option quotes for filter {0} and optionsIds {1} ...".format(filters, optionIds)
+            "Getting option quotes for filter {0} and option_ids {1} ...".format(
+                filters, option_ids
+            )
         )
         payload = dict()
         if filters is not None:
             payload["filters"] = filters
-        if optionIds is not None:
-            payload["optionIds"] = optionIds
+        if option_ids is not None:
+            payload["optionIds"] = option_ids
         response = self._send_message("post", "markets/quotes/options", json=payload)
         return response
