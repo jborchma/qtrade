@@ -565,6 +565,7 @@ class Questrade:
         log.info(f"Getting option chain for ticker {ticker} ...")
         info = self.ticker_information([ticker])
         if not isinstance(info, dict):
+            log.error(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
             raise Exception(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
         symbol_id = info["symbolId"]
         response = self._send_message("get", "symbols/" + str(symbol_id) + "/options")

@@ -1,13 +1,13 @@
 """Questrade test module
 """
 from unittest import mock
-from requests import Session
+
 import pytest
+from requests import Session
+
 from qtrade import Questrade
 
-TOKEN_URL = (
-    "https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token="
-)
+TOKEN_URL = "https://login.questrade.com/oauth2/token?grant_type=refresh_token&refresh_token="
 
 VALID_ACCESS_TOKEN = {
     "access_token": "hunter2",
@@ -164,6 +164,28 @@ HIST_RESPONSE = {
     ]
 }
 
+OPTIONS_CHAIN_RESPONSE = {
+    "options": [
+        {
+            "expiryDate": "2015-01-17T00:00:00.000000-05:00",
+            "description": "Apple",
+            "listingExchange": "ASD",
+            "optionExerciseType": "American",
+            "chainPerRoot": [
+                {
+                    "root": "AAPL",
+                    "chainPerStrikePrice": [
+                        {"strikePrice": 60, "callSymbolId": 6101993, "putSymbolId": 6102009},
+                        {"strikePrice": 62, "callSymbolId": 6101994, "putSymbolId": 6102010},
+                        {"strikePrice": 64, "callSymbolId": 6101995, "putSymbolId": 6102011},
+                    ],
+                    "multiplier": 100,
+                }
+            ],
+        }
+    ]
+}
+
 ACCESS_TOKEN_YAML = """access_token: hunter2
 api_server: http://www.api_url.com
 expires_in: 1234
@@ -180,21 +202,18 @@ expires_in: 1234
 # Since a lot of the methods in the Questrade class use `requests.get` and get the json data,
 # it makes sense to wrap this in a class
 class MockResponse:
-    """Class that includes json data and status code for request get results
-    """
+    """Class that includes json data and status code for request get results"""
 
     def __init__(self, json_data, status_code):
         self.json_data = json_data
         self.status_code = status_code
 
     def json(self):
-        """Method to return mocked json data
-        """
+        """Method to return mocked json data"""
         return self.json_data
 
     def raise_for_status(self):
-        """Method to raise Exceptions for certain returned statuses
-        """
+        """Method to raise Exceptions for certain returned statuses"""
         http_error_msg = ""
         if 400 <= self.status_code < 500:
             http_error_msg = "%s Client Error" % (self.status_code)
@@ -210,8 +229,7 @@ class MockResponse:
 
 
 def mocked_access_token_requests_get(*args, **kwargs):
-    """mocking access token requests get method
-    """
+    """mocking access token requests get method"""
     if args[0] == TOKEN_URL + "hunter2":
         return MockResponse(VALID_ACCESS_TOKEN, 200)
     elif args[0] == TOKEN_URL + "hunter3":
@@ -221,8 +239,7 @@ def mocked_access_token_requests_get(*args, **kwargs):
 
 
 def mocked_acct_id_get(*args, **kwargs):
-    """mocking acct_id requests get
-    """
+    """mocking acct_id requests get"""
     if args[1] == "http://www.api_url.com/v1/accounts":
         return MockResponse(ACCOUNT_RESPONSE, 200)
     else:
@@ -230,8 +247,7 @@ def mocked_acct_id_get(*args, **kwargs):
 
 
 def mocked_positions_get(*args, **kwargs):
-    """mocking acct_id requests get
-    """
+    """mocking acct_id requests get"""
     if args[1] == "http://www.api_url.com/v1/accounts/123/positions":
         return MockResponse(POSITION_RESPONSE, 200)
     else:
@@ -239,11 +255,8 @@ def mocked_positions_get(*args, **kwargs):
 
 
 def mocked_activities_get(*args, **kwargs):
-    """mocking activities requests get
-    """
-    if args[1] == "http://www.api_url.com/v1/accounts/123/activities" and kwargs[
-        "params"
-    ] == {
+    """mocking activities requests get"""
+    if args[1] == "http://www.api_url.com/v1/accounts/123/activities" and kwargs["params"] == {
         "endTime": "2018-08-10T00:00:00-05:00",
         "startTime": "2018-08-07T00:00:00-05:00",
     }:
@@ -253,11 +266,8 @@ def mocked_activities_get(*args, **kwargs):
 
 
 def mocked_ticker_get(*args, **kwargs):
-    """mocking ticker info requests get
-    """
-    if args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {
-        "names": "XYZ"
-    }:
+    """mocking ticker info requests get"""
+    if args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {"names": "XYZ"}:
         return MockResponse(TICKER_RESPONSE_SINGLE, 200)
     elif args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {
         "names": "XYZ,ABC"
@@ -268,11 +278,8 @@ def mocked_ticker_get(*args, **kwargs):
 
 
 def mocked_quote_get(*args, **kwargs):
-    """mocking quote requests get
-    """
-    if args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {
-        "names": "XYZ"
-    }:
+    """mocking quote requests get"""
+    if args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {"names": "XYZ"}:
         return MockResponse(TICKER_RESPONSE_SINGLE, 200)
     elif args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {
         "names": "XYZ,ABC"
@@ -291,15 +298,10 @@ def mocked_quote_get(*args, **kwargs):
 
 
 def mocked_historical_get(*args, **kwargs):
-    """mocking historical data requests get
-    """
-    if args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {
-        "names": "XYZ"
-    }:
+    """mocking historical data requests get"""
+    if args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {"names": "XYZ"}:
         return MockResponse(TICKER_RESPONSE_SINGLE, 200)
-    if args[1] == "http://www.api_url.com/v1/markets/candles/1234567" and kwargs[
-        "params"
-    ] == {
+    if args[1] == "http://www.api_url.com/v1/markets/candles/1234567" and kwargs["params"] == {
         "startTime": "2018-08-01T00:00:00-05:00",
         "interval": "OneDay",
         "endTime": "2018-08-02T00:00:00-05:00",
@@ -309,15 +311,22 @@ def mocked_historical_get(*args, **kwargs):
         return MockResponse(None, 404)
 
 
+def mocked_option_chain_get(*args, **kwargs):
+    """mocking option chain requests get"""
+    if args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {"names": "XYZ"}:
+        return MockResponse(TICKER_RESPONSE_SINGLE, 200)
+    if args[1] == "http://www.api_url.com/v1/symbols/1234567/options":
+        return MockResponse(OPTIONS_CHAIN_RESPONSE, 200)
+    else:
+        return MockResponse(None, 404)
+
+
 ### TEST FUNCTIONS ###
 
 
-@mock.patch(
-    "qtrade.questrade.requests.get", side_effect=mocked_access_token_requests_get
-)
+@mock.patch("qtrade.questrade.requests.get", side_effect=mocked_access_token_requests_get)
 def test_get_access_token(mock_get):
-    """This function tests the get access token method.
-    """
+    """This function tests the get access token method."""
     qtrade = Questrade(access_code="hunter2")
     assert set(qtrade.access_token.keys()) == set(
         ["access_token", "api_server", "expires_in", "refresh_token", "token_type"]
@@ -329,8 +338,7 @@ def test_get_access_token(mock_get):
 
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
 def test_init_via_yaml():
-    """This function tests when the class is initiated via yaml file.
-    """
+    """This function tests when the class is initiated via yaml file."""
     qtrade = Questrade(token_yaml="access_token.yml")
     assert set(qtrade.access_token.keys()) == set(
         ["access_token", "api_server", "expires_in", "refresh_token", "token_type"]
@@ -344,20 +352,16 @@ def test_init_via_yaml():
 
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
 def test_init_via_incomplete_yaml():
-    """This function tests when the class is initiated via incomplete yaml file.
-    """
+    """This function tests when the class is initiated via incomplete yaml file."""
     with pytest.raises(Exception) as e_info:
         _ = Questrade(token_yaml="access_token.yml")
         assert str(e_info.value) == "Refresh token was not provided."
 
 
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
-@mock.patch(
-    "qtrade.questrade.requests.get", side_effect=mocked_access_token_requests_get
-)
+@mock.patch("qtrade.questrade.requests.get", side_effect=mocked_access_token_requests_get)
 def test_refresh_token_yaml(mock_get):
-    """This function tests the refresh token method by using the yaml.
-    """
+    """This function tests the refresh token method by using the yaml."""
     qtrade = Questrade(token_yaml="access_token.yml")
     qtrade.refresh_access_token(from_yaml=True)
     assert set(qtrade.access_token.keys()) == set(
@@ -367,12 +371,9 @@ def test_refresh_token_yaml(mock_get):
 
 
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
-@mock.patch(
-    "qtrade.questrade.requests.get", side_effect=mocked_access_token_requests_get
-)
+@mock.patch("qtrade.questrade.requests.get", side_effect=mocked_access_token_requests_get)
 def test_refresh_token_non_yaml(mock_get):
-    """This function tests the refresh token method without yaml use.
-    """
+    """This function tests the refresh token method without yaml use."""
     qtrade = Questrade(token_yaml="access_token.yml")
     qtrade.refresh_access_token()
     assert set(qtrade.access_token.keys()) == set(
@@ -384,8 +385,7 @@ def test_refresh_token_non_yaml(mock_get):
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
 @mock.patch.object(Session, "request", side_effect=mocked_acct_id_get)
 def test_get_account_id(mock_get):
-    """This function tests the account ID function.
-    """
+    """This function tests the account ID function."""
     qtrade = Questrade(token_yaml="access_token.yml")
     acct_id = qtrade.get_account_id()
     assert acct_id == [123, 456]
@@ -394,8 +394,7 @@ def test_get_account_id(mock_get):
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
 @mock.patch.object(Session, "request", side_effect=mocked_positions_get)
 def test_get_positions(mock_get):
-    """This function tests the get account positions method.
-    """
+    """This function tests the get account positions method."""
     qtrade = Questrade(token_yaml="access_token.yml")
     positions = qtrade.get_account_positions(123)
     assert positions[0]["symbol"] == "XYZ"
@@ -413,8 +412,7 @@ def test_get_positions(mock_get):
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
 @mock.patch.object(Session, "request", side_effect=mocked_activities_get)
 def test_get_activity(mock_get):
-    """This function tests the get account activities method.
-    """
+    """This function tests the get account activities method."""
     qtrade = Questrade(token_yaml="access_token.yml")
     activities = qtrade.get_account_activities(123, "2018-08-07", "2018-08-10")
     assert activities[0]["action"] == "Buy"
@@ -429,8 +427,7 @@ def test_get_activity(mock_get):
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
 @mock.patch.object(Session, "request", side_effect=mocked_ticker_get)
 def test_get_ticker_information(mock_get):
-    """This function tests the get ticker information method.
-    """
+    """This function tests the get ticker information method."""
     qtrade = Questrade(token_yaml="access_token.yml")
     ticker_info_single = qtrade.ticker_information("XYZ")
     assert len(ticker_info_single) == 34
@@ -447,8 +444,7 @@ def test_get_ticker_information(mock_get):
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
 @mock.patch.object(Session, "request", side_effect=mocked_quote_get)
 def test_get_quote(mock_get):
-    """This function tests the get quote method.
-    """
+    """This function tests the get quote method."""
     qtrade = Questrade(token_yaml="access_token.yml")
     quote_single = qtrade.get_quote("XYZ")
     assert len(quote_single) == 21
@@ -466,14 +462,21 @@ def test_get_quote(mock_get):
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
 @mock.patch.object(Session, "request", side_effect=mocked_historical_get)
 def test_get_historical_data(mock_get):
-    """This function tests the get historical data method.
-    """
+    """This function tests the get historical data method."""
     qtrade = Questrade(token_yaml="access_token.yml")
-    historical_data = qtrade.get_historical_data(
-        "XYZ", "2018-08-01", "2018-08-02", "OneDay"
-    )
+    historical_data = qtrade.get_historical_data("XYZ", "2018-08-01", "2018-08-02", "OneDay")
     assert len(historical_data) == 2
     assert len(historical_data[0]) == 8
     assert len(historical_data[1]) == 8
     assert historical_data[0]["start"] == "2018-08-01T01:00:00.000000-04:00"
     assert historical_data[1]["start"] == "2018-08-02T00:00:00.000000-04:00"
+
+
+@mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch.object(Session, "request", side_effect=mocked_option_chain_get)
+def test_get_option_chain(mock_get):
+    """This function tests the get historical data method."""
+    qtrade = Questrade(token_yaml="access_token.yml")
+    option_chain_data = qtrade.get_option_chain("XYZ")
+    assert len(option_chain_data) == 1
+    assert len(option_chain_data["options"]) == 1
