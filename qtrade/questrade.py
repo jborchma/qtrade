@@ -513,3 +513,137 @@ class Questrade:
         )
 
         return response
+
+    def get_option_chain(self, ticker: str) -> Dict:
+        """Retrieve an option chain for a particular underlying symbol.
+
+        https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options
+
+        This method will return a dictionary of the form
+
+        ``{
+            "options": [
+            {
+              "expiryDate": "2015-01-17T00:00:00.000000-05:00",
+              "description": "BANK OF MONTREAL",
+              "listingExchange": "MX",
+              "optionExerciseType": "American",
+              "chainPerRoot": [
+              {
+                "root": "BMO",
+                "chainPerStrikePrice": [
+                {
+                  "strikePrice": 60,
+                  "callSymbolId": 6101993,
+                  "putSymbolId": 6102009
+                },
+                {
+                  "strikePrice": 62,
+                  "callSymbolId": 6101994,
+                  "putSymbolId": 6102010
+                },
+                {
+                  "strikePrice": 64,
+                  "callSymbolId": 6101995,
+                  "putSymbolId": 6102011
+                }],
+                "multiplier": 100
+              }]
+            }]
+          }``
+
+        Parameters
+        ----------
+        ticker: str
+            Ticker symbol
+
+        Returns
+        -------
+        dict:
+            Dictionary of option chain information for a particular symbol.
+        """
+        log.info(f"Getting option chain for ticker {ticker} ...")
+        info = self.ticker_information([ticker])
+        if not isinstance(info, dict):
+            log.error(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
+            raise Exception(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
+        symbol_id = info["symbolId"]
+        response = self._send_message("get", "symbols/" + str(symbol_id) + "/options")
+        return response
+
+    def get_option_quotes(self, filters: List[Dict], option_ids: List[int]) -> Dict:
+        """Retrieve a single Level 1 market quote and Greek data for one or more option symbols.
+
+        www.questrade.com/api/documentation/rest-operations/market-calls/markets-quotes-options
+
+        This method will return a dictionary of the form
+
+        ``{
+            "optionQuotes": [
+                {
+                    "underlying": "MSFT",
+                    "underlyingId": 27426,
+                    "symbol": "MSFT20Jan17C70.00",
+                    "symbolId": 7413503,
+                    "bidPrice": 4.90,
+                    "bidSize": 0,
+                    "askPrice": 4.95,
+                    "askSize": 0,
+                    "lastTradePriceTrHrs": 4.93,
+                    "lastTradePrice": 4.93,
+                    "lastTradeSize": 0,
+                    "lastTradeTick": "Equal",
+                    "lastTradeTime": "2015-08-17T00:00:00.000000-04:00",
+                    "volume": 0,
+                    "openPrice": 0,
+                    "highPricehighPrice": 4.93,
+                    "lowPrice": 0,
+                    "volatility": 52.374257,
+                    "delta": 0.06985,
+                    "gamma": 0.01038,
+                    "theta": -0.001406,
+                    "vega": 0.074554,
+                    "rho": 0.04153,
+                    "openInterest": 2292,
+                    "delay": 0,
+                    "isHalted": False,
+                    "VWAP": 0,
+                }
+            ]
+        }``
+
+        Parameters
+        ----------
+        filters: List of dictionaries
+            List of filters. For example
+
+            ``[
+                 {
+                   "optionType": "Call",
+                   "underlyingId": 27426,
+                   "expiryDate": "2017-01-20T00:00:00.000000-05:00",
+                   "minstrikePrice": 70,
+                   "maxstrikePrice": 80
+                 }
+             ]``
+
+         option_ids: [int]
+             List of option IDs
+
+        Returns
+        -------
+        dict:
+             Dictionary of option quotes.
+        """
+        log.info(
+            "Getting option quotes for filter {0} and option_ids {1} ...".format(
+                filters, option_ids
+            )
+        )
+        payload = dict()
+        if filters is not None:
+            payload["filters"] = filters
+        if option_ids is not None:
+            payload["optionIds"] = option_ids
+        response = self._send_message("post", "markets/quotes/options", json=payload)
+        return response
