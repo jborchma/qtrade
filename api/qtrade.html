@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>qtrade package &mdash; Qtrade 0.2.3 documentation</title>
+  <title>qtrade package &mdash; Qtrade 0.3.0 documentation</title>
 
 
 
@@ -59,7 +59,7 @@
 
 
               <div class="version">
-                0.2.3
+                0.3.0
               </div>
 
 
@@ -193,20 +193,22 @@ with an access_code or the path of a access token yaml file.</p>
 interval.</p>
 <p>This method will in general return a list of dictionaries, where each dictionary represents
 one trade/account activity. Each dictionary is of the form</p>
-<p><code class="docutils literal notranslate"><span class="pre">{'action':</span> <span class="pre">'Buy',</span>
-<span class="pre">'commission':</span> <span class="pre">-5.01,</span>
-<span class="pre">'currency':</span> <span class="pre">'CAD',</span>
-<span class="pre">'description':</span> <span class="pre">'description</span> <span class="pre">text',</span>
-<span class="pre">'grossAmount':</span> <span class="pre">-1000,</span>
-<span class="pre">'netAmount':</span> <span class="pre">-1005.01,</span>
-<span class="pre">'price':</span> <span class="pre">10,</span>
-<span class="pre">'quantity':</span> <span class="pre">100,</span>
-<span class="pre">'settlementDate':</span> <span class="pre">'2018-08-09T00:00:00.000000-04:00',</span>
-<span class="pre">'symbol':</span> <span class="pre">'XYZ.TO',</span>
-<span class="pre">'symbolId':</span> <span class="pre">1234567,</span>
-<span class="pre">'tradeDate':</span> <span class="pre">'2018-08-07T00:00:00.000000-04:00',</span>
-<span class="pre">'transactionDate':</span> <span class="pre">'2018-08-09T00:00:00.000000-04:00',</span>
-<span class="pre">'type':</span> <span class="pre">'Trades'}</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="s1">&#39;Buy&#39;</span><span class="p">,</span>
+<span class="s1">&#39;commission&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.01</span><span class="p">,</span>
+<span class="s1">&#39;currency&#39;</span><span class="p">:</span> <span class="s1">&#39;CAD&#39;</span><span class="p">,</span>
+<span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;description text&#39;</span><span class="p">,</span>
+<span class="s1">&#39;grossAmount&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1000</span><span class="p">,</span>
+<span class="s1">&#39;netAmount&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1005.01</span><span class="p">,</span>
+<span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<span class="s1">&#39;quantity&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+<span class="s1">&#39;settlementDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-08-09T00:00:00.000000-04:00&#39;</span><span class="p">,</span>
+<span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="s1">&#39;XYZ.TO&#39;</span><span class="p">,</span>
+<span class="s1">&#39;symbolId&#39;</span><span class="p">:</span> <span class="mi">1234567</span><span class="p">,</span>
+<span class="s1">&#39;tradeDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-08-07T00:00:00.000000-04:00&#39;</span><span class="p">,</span>
+<span class="s1">&#39;transactionDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-08-09T00:00:00.000000-04:00&#39;</span><span class="p">,</span>
+<span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Trades&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -247,18 +249,20 @@ information.</p>
 <p>This method will get the positions for the account ID connected to the token.</p>
 <p>The returned data is a list where for each position, a dictionary with the following
 data will be returned:</p>
-<p><code class="docutils literal notranslate"><span class="pre">{'averageEntryPrice':</span> <span class="pre">1000,</span>
-<span class="pre">'closedPnl':</span> <span class="pre">0,</span>
-<span class="pre">'closedQuantity':</span> <span class="pre">0,</span>
-<span class="pre">'currentMarketValue':</span> <span class="pre">3120,</span>
-<span class="pre">'currentPrice':</span> <span class="pre">1040,</span>
-<span class="pre">'isRealTime':</span> <span class="pre">False,</span>
-<span class="pre">'isUnderReorg':</span> <span class="pre">False,</span>
-<span class="pre">'openPnl':</span> <span class="pre">120,</span>
-<span class="pre">'openQuantity':</span> <span class="pre">3,</span>
-<span class="pre">'symbol':</span> <span class="pre">'XYZ',</span>
-<span class="pre">'symbolId':</span> <span class="pre">1234567,</span>
-<span class="pre">'totalCost':</span> <span class="pre">3000}</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;averageEntryPrice&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+<span class="s1">&#39;closedPnl&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="s1">&#39;closedQuantity&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="s1">&#39;currentMarketValue&#39;</span><span class="p">:</span> <span class="mi">3120</span><span class="p">,</span>
+<span class="s1">&#39;currentPrice&#39;</span><span class="p">:</span> <span class="mi">1040</span><span class="p">,</span>
+<span class="s1">&#39;isRealTime&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+<span class="s1">&#39;isUnderReorg&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+<span class="s1">&#39;openPnl&#39;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+<span class="s1">&#39;openQuantity&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="s1">&#39;XYZ&#39;</span><span class="p">,</span>
+<span class="s1">&#39;symbolId&#39;</span><span class="p">:</span> <span class="mi">1234567</span><span class="p">,</span>
+<span class="s1">&#39;totalCost&#39;</span><span class="p">:</span> <span class="mi">3000</span><span class="p">}</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>account_id</strong> (<em>int</em>) – Account ID for which the positions will be returned.</p>
@@ -292,6 +296,127 @@ information.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qtrade.questrade.Questrade.get_option_chain">
+<code class="sig-name descname">get_option_chain</code><span class="sig-paren">(</span><em class="sig-param">ticker: str</em><span class="sig-paren">)</span> &#x2192; Dict<a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_option_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_option_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve an option chain for a particular underlying symbol.</p>
+<p><a class="reference external" href="https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options">https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options</a></p>
+<p>This method will return a dictionary of the form</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;expiryDate&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-01-17T00:00:00.000000-05:00&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;BANK OF MONTREAL&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;listingExchange&quot;</span><span class="p">:</span> <span class="s2">&quot;MX&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;optionExerciseType&quot;</span><span class="p">:</span> <span class="s2">&quot;American&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;chainPerRoot&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="s2">&quot;root&quot;</span><span class="p">:</span> <span class="s2">&quot;BMO&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;chainPerStrikePrice&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;strikePrice&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+          <span class="s2">&quot;callSymbolId&quot;</span><span class="p">:</span> <span class="mi">6101993</span><span class="p">,</span>
+          <span class="s2">&quot;putSymbolId&quot;</span><span class="p">:</span> <span class="mi">6102009</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;strikePrice&quot;</span><span class="p">:</span> <span class="mi">62</span><span class="p">,</span>
+          <span class="s2">&quot;callSymbolId&quot;</span><span class="p">:</span> <span class="mi">6101994</span><span class="p">,</span>
+          <span class="s2">&quot;putSymbolId&quot;</span><span class="p">:</span> <span class="mi">6102010</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;strikePrice&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+          <span class="s2">&quot;callSymbolId&quot;</span><span class="p">:</span> <span class="mi">6101995</span><span class="p">,</span>
+          <span class="s2">&quot;putSymbolId&quot;</span><span class="p">:</span> <span class="mi">6102011</span>
+        <span class="p">}],</span>
+        <span class="s2">&quot;multiplier&quot;</span><span class="p">:</span> <span class="mi">100</span>
+      <span class="p">}]</span>
+    <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ticker</strong> (<em>str</em>) – Ticker symbol</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary of option chain information for a particular symbol.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qtrade.questrade.Questrade.get_option_quotes">
+<code class="sig-name descname">get_option_quotes</code><span class="sig-paren">(</span><em class="sig-param">filters: List[Dict], option_ids: List[int]</em><span class="sig-paren">)</span> &#x2192; Dict<a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_option_quotes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_option_quotes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a single Level 1 market quote and Greek data for one or more option symbols.</p>
+<p>www.questrade.com/api/documentation/rest-operations/market-calls/markets-quotes-options</p>
+<p>This method will return a dictionary of the form</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;optionQuotes&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;underlying&quot;</span><span class="p">:</span> <span class="s2">&quot;MSFT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;underlyingId&quot;</span><span class="p">:</span> <span class="mi">27426</span><span class="p">,</span>
+            <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;MSFT20Jan17C70.00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;symbolId&quot;</span><span class="p">:</span> <span class="mi">7413503</span><span class="p">,</span>
+            <span class="s2">&quot;bidPrice&quot;</span><span class="p">:</span> <span class="mf">4.90</span><span class="p">,</span>
+            <span class="s2">&quot;bidSize&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;askPrice&quot;</span><span class="p">:</span> <span class="mf">4.95</span><span class="p">,</span>
+            <span class="s2">&quot;askSize&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradePriceTrHrs&quot;</span><span class="p">:</span> <span class="mf">4.93</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradePrice&quot;</span><span class="p">:</span> <span class="mf">4.93</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradeSize&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradeTick&quot;</span><span class="p">:</span> <span class="s2">&quot;Equal&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradeTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-08-17T00:00:00.000000-04:00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;openPrice&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;highPricehighPrice&quot;</span><span class="p">:</span> <span class="mf">4.93</span><span class="p">,</span>
+            <span class="s2">&quot;lowPrice&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;volatility&quot;</span><span class="p">:</span> <span class="mf">52.374257</span><span class="p">,</span>
+            <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="mf">0.06985</span><span class="p">,</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.01038</span><span class="p">,</span>
+            <span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.001406</span><span class="p">,</span>
+            <span class="s2">&quot;vega&quot;</span><span class="p">:</span> <span class="mf">0.074554</span><span class="p">,</span>
+            <span class="s2">&quot;rho&quot;</span><span class="p">:</span> <span class="mf">0.04153</span><span class="p">,</span>
+            <span class="s2">&quot;openInterest&quot;</span><span class="p">:</span> <span class="mi">2292</span><span class="p">,</span>
+            <span class="s2">&quot;delay&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;isHalted&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+            <span class="s2">&quot;VWAP&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filters</strong> (<em>List of dictionaries</em>) –    List of filters. For example</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+     <span class="s2">&quot;optionType&quot;</span><span class="p">:</span> <span class="s2">&quot;Call&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;underlyingId&quot;</span><span class="p">:</span> <span class="mi">27426</span><span class="p">,</span>
+     <span class="s2">&quot;expiryDate&quot;</span><span class="p">:</span> <span class="s2">&quot;2017-01-20T00:00:00.000000-05:00&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;minstrikePrice&quot;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+     <span class="s2">&quot;maxstrikePrice&quot;</span><span class="p">:</span> <span class="mi">80</span>
+     <span class="p">}</span>
+ <span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="simple">
+<dt>option_ids: [int]</dt><dd><p>List of option IDs</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary of option quotes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -357,18 +482,20 @@ access_token.yml</p>
 <dd><p>Submit order.</p>
 <p>This method submits an order to Questrade. Note that currently only partner apps can submit
 orders to the Questrade API. The order information is provided in a dictionary of the form</p>
-<p><code class="docutils literal notranslate"><span class="pre">{'accountNumber':</span> <span class="pre">1234567,</span>
-<span class="pre">'symbolId':</span> <span class="pre">3925293,</span>
-<span class="pre">'quantity':</span> <span class="pre">1,</span>
-<span class="pre">'icebergQuantity':</span> <span class="pre">1,</span>
-<span class="pre">'limitPrice':</span> <span class="pre">57.58,</span>
-<span class="pre">'isAllOrNone':</span> <span class="pre">True,</span>
-<span class="pre">'isAnonymous':</span> <span class="pre">False,</span>
-<span class="pre">'orderType':</span> <span class="pre">'Limit',</span>
-<span class="pre">'timeInForce':</span> <span class="pre">'GoodTillCanceled',</span>
-<span class="pre">'action':</span> <span class="pre">'Buy',</span>
-<span class="pre">'primaryRoute':</span> <span class="pre">'AUTO',</span>
-<span class="pre">'secondaryRoute':</span> <span class="pre">'AUTO'}</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;accountNumber&#39;</span><span class="p">:</span> <span class="mi">1234567</span><span class="p">,</span>
+<span class="s1">&#39;symbolId&#39;</span><span class="p">:</span> <span class="mi">3925293</span><span class="p">,</span>
+<span class="s1">&#39;quantity&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="s1">&#39;icebergQuantity&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="s1">&#39;limitPrice&#39;</span><span class="p">:</span> <span class="mf">57.58</span><span class="p">,</span>
+<span class="s1">&#39;isAllOrNone&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+<span class="s1">&#39;isAnonymous&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+<span class="s1">&#39;orderType&#39;</span><span class="p">:</span> <span class="s1">&#39;Limit&#39;</span><span class="p">,</span>
+<span class="s1">&#39;timeInForce&#39;</span><span class="p">:</span> <span class="s1">&#39;GoodTillCanceled&#39;</span><span class="p">,</span>
+<span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="s1">&#39;Buy&#39;</span><span class="p">,</span>
+<span class="s1">&#39;primaryRoute&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTO&#39;</span><span class="p">,</span>
+<span class="s1">&#39;secondaryRoute&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTO&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>qtrade.questrade &mdash; Qtrade 0.2.3 documentation</title>
+  <title>qtrade.questrade &mdash; Qtrade 0.3.0 documentation</title>
 
 
 
@@ -58,7 +58,7 @@
 
 
               <div class="version">
-                0.2.3
+                0.3.0
               </div>
 
 
@@ -409,18 +409,20 @@
 <span class="sd">        The returned data is a list where for each position, a dictionary with the following</span>
 <span class="sd">        data will be returned:</span>
 
-<span class="sd">        ``{&#39;averageEntryPrice&#39;: 1000,</span>
-<span class="sd">        &#39;closedPnl&#39;: 0,</span>
-<span class="sd">        &#39;closedQuantity&#39;: 0,</span>
-<span class="sd">        &#39;currentMarketValue&#39;: 3120,</span>
-<span class="sd">        &#39;currentPrice&#39;: 1040,</span>
-<span class="sd">        &#39;isRealTime&#39;: False,</span>
-<span class="sd">        &#39;isUnderReorg&#39;: False,</span>
-<span class="sd">        &#39;openPnl&#39;: 120,</span>
-<span class="sd">        &#39;openQuantity&#39;: 3,</span>
-<span class="sd">        &#39;symbol&#39;: &#39;XYZ&#39;,</span>
-<span class="sd">        &#39;symbolId&#39;: 1234567,</span>
-<span class="sd">        &#39;totalCost&#39;: 3000}``</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {&#39;averageEntryPrice&#39;: 1000,</span>
+<span class="sd">            &#39;closedPnl&#39;: 0,</span>
+<span class="sd">            &#39;closedQuantity&#39;: 0,</span>
+<span class="sd">            &#39;currentMarketValue&#39;: 3120,</span>
+<span class="sd">            &#39;currentPrice&#39;: 1040,</span>
+<span class="sd">            &#39;isRealTime&#39;: False,</span>
+<span class="sd">            &#39;isUnderReorg&#39;: False,</span>
+<span class="sd">            &#39;openPnl&#39;: 120,</span>
+<span class="sd">            &#39;openQuantity&#39;: 3,</span>
+<span class="sd">            &#39;symbol&#39;: &#39;XYZ&#39;,</span>
+<span class="sd">            &#39;symbolId&#39;: 1234567,</span>
+<span class="sd">            &#39;totalCost&#39;: 3000}</span>
 
 
 <span class="sd">        Parameters</span>
@@ -456,20 +458,22 @@
 <span class="sd">        This method will in general return a list of dictionaries, where each dictionary represents</span>
 <span class="sd">        one trade/account activity. Each dictionary is of the form</span>
 
-<span class="sd">        ``{&#39;action&#39;: &#39;Buy&#39;,</span>
-<span class="sd">        &#39;commission&#39;: -5.01,</span>
-<span class="sd">        &#39;currency&#39;: &#39;CAD&#39;,</span>
-<span class="sd">        &#39;description&#39;: &#39;description text&#39;,</span>
-<span class="sd">        &#39;grossAmount&#39;: -1000,</span>
-<span class="sd">        &#39;netAmount&#39;: -1005.01,</span>
-<span class="sd">        &#39;price&#39;: 10,</span>
-<span class="sd">        &#39;quantity&#39;: 100,</span>
-<span class="sd">        &#39;settlementDate&#39;: &#39;2018-08-09T00:00:00.000000-04:00&#39;,</span>
-<span class="sd">        &#39;symbol&#39;: &#39;XYZ.TO&#39;,</span>
-<span class="sd">        &#39;symbolId&#39;: 1234567,</span>
-<span class="sd">        &#39;tradeDate&#39;: &#39;2018-08-07T00:00:00.000000-04:00&#39;,</span>
-<span class="sd">        &#39;transactionDate&#39;: &#39;2018-08-09T00:00:00.000000-04:00&#39;,</span>
-<span class="sd">        &#39;type&#39;: &#39;Trades&#39;}``</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {&#39;action&#39;: &#39;Buy&#39;,</span>
+<span class="sd">            &#39;commission&#39;: -5.01,</span>
+<span class="sd">            &#39;currency&#39;: &#39;CAD&#39;,</span>
+<span class="sd">            &#39;description&#39;: &#39;description text&#39;,</span>
+<span class="sd">            &#39;grossAmount&#39;: -1000,</span>
+<span class="sd">            &#39;netAmount&#39;: -1005.01,</span>
+<span class="sd">            &#39;price&#39;: 10,</span>
+<span class="sd">            &#39;quantity&#39;: 100,</span>
+<span class="sd">            &#39;settlementDate&#39;: &#39;2018-08-09T00:00:00.000000-04:00&#39;,</span>
+<span class="sd">            &#39;symbol&#39;: &#39;XYZ.TO&#39;,</span>
+<span class="sd">            &#39;symbolId&#39;: 1234567,</span>
+<span class="sd">            &#39;tradeDate&#39;: &#39;2018-08-07T00:00:00.000000-04:00&#39;,</span>
+<span class="sd">            &#39;transactionDate&#39;: &#39;2018-08-09T00:00:00.000000-04:00&#39;,</span>
+<span class="sd">            &#39;type&#39;: &#39;Trades&#39;}</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -633,18 +637,20 @@
 <span class="sd">        This method submits an order to Questrade. Note that currently only partner apps can submit</span>
 <span class="sd">        orders to the Questrade API. The order information is provided in a dictionary of the form</span>
 
-<span class="sd">        ``{&#39;accountNumber&#39;: 1234567,</span>
-<span class="sd">        &#39;symbolId&#39;: 3925293,</span>
-<span class="sd">        &#39;quantity&#39;: 1,</span>
-<span class="sd">        &#39;icebergQuantity&#39;: 1,</span>
-<span class="sd">        &#39;limitPrice&#39;: 57.58,</span>
-<span class="sd">        &#39;isAllOrNone&#39;: True,</span>
-<span class="sd">        &#39;isAnonymous&#39;: False,</span>
-<span class="sd">        &#39;orderType&#39;: &#39;Limit&#39;,</span>
-<span class="sd">        &#39;timeInForce&#39;: &#39;GoodTillCanceled&#39;,</span>
-<span class="sd">        &#39;action&#39;: &#39;Buy&#39;,</span>
-<span class="sd">        &#39;primaryRoute&#39;: &#39;AUTO&#39;,</span>
-<span class="sd">        &#39;secondaryRoute&#39;: &#39;AUTO&#39;}``</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {&#39;accountNumber&#39;: 1234567,</span>
+<span class="sd">            &#39;symbolId&#39;: 3925293,</span>
+<span class="sd">            &#39;quantity&#39;: 1,</span>
+<span class="sd">            &#39;icebergQuantity&#39;: 1,</span>
+<span class="sd">            &#39;limitPrice&#39;: 57.58,</span>
+<span class="sd">            &#39;isAllOrNone&#39;: True,</span>
+<span class="sd">            &#39;isAnonymous&#39;: False,</span>
+<span class="sd">            &#39;orderType&#39;: &#39;Limit&#39;,</span>
+<span class="sd">            &#39;timeInForce&#39;: &#39;GoodTillCanceled&#39;,</span>
+<span class="sd">            &#39;action&#39;: &#39;Buy&#39;,</span>
+<span class="sd">            &#39;primaryRoute&#39;: &#39;AUTO&#39;,</span>
+<span class="sd">            &#39;secondaryRoute&#39;: &#39;AUTO&#39;}</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -666,6 +672,145 @@
             <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;accounts/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">acct_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/orders&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">order_dict</span>
         <span class="p">)</span>
 
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="Questrade.get_option_chain"><a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_option_chain">[docs]</a>    <span class="k">def</span> <span class="nf">get_option_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve an option chain for a particular underlying symbol.</span>
+
+<span class="sd">        https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options</span>
+
+<span class="sd">        This method will return a dictionary of the form</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;options&quot;: [</span>
+<span class="sd">                {</span>
+<span class="sd">                  &quot;expiryDate&quot;: &quot;2015-01-17T00:00:00.000000-05:00&quot;,</span>
+<span class="sd">                  &quot;description&quot;: &quot;BANK OF MONTREAL&quot;,</span>
+<span class="sd">                  &quot;listingExchange&quot;: &quot;MX&quot;,</span>
+<span class="sd">                  &quot;optionExerciseType&quot;: &quot;American&quot;,</span>
+<span class="sd">                  &quot;chainPerRoot&quot;: [</span>
+<span class="sd">                  {</span>
+<span class="sd">                    &quot;root&quot;: &quot;BMO&quot;,</span>
+<span class="sd">                    &quot;chainPerStrikePrice&quot;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                      &quot;strikePrice&quot;: 60,</span>
+<span class="sd">                      &quot;callSymbolId&quot;: 6101993,</span>
+<span class="sd">                      &quot;putSymbolId&quot;: 6102009</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                      &quot;strikePrice&quot;: 62,</span>
+<span class="sd">                      &quot;callSymbolId&quot;: 6101994,</span>
+<span class="sd">                      &quot;putSymbolId&quot;: 6102010</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                      &quot;strikePrice&quot;: 64,</span>
+<span class="sd">                      &quot;callSymbolId&quot;: 6101995,</span>
+<span class="sd">                      &quot;putSymbolId&quot;: 6102011</span>
+<span class="sd">                    }],</span>
+<span class="sd">                    &quot;multiplier&quot;: 100</span>
+<span class="sd">                  }]</span>
+<span class="sd">                }]</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ticker: str</span>
+<span class="sd">            Ticker symbol</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict:</span>
+<span class="sd">            Dictionary of option chain information for a particular symbol.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Getting option chain for ticker </span><span class="si">{ticker}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ticker_information</span><span class="p">([</span><span class="n">ticker</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Something went wrong retrieving the symbol ID for ticker </span><span class="si">{ticker}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Something went wrong retrieving the symbol ID for ticker </span><span class="si">{ticker}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="n">symbol_id</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;symbolId&quot;</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;symbols/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbol_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/options&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="Questrade.get_option_quotes"><a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_option_quotes">[docs]</a>    <span class="k">def</span> <span class="nf">get_option_quotes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span> <span class="n">option_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a single Level 1 market quote and Greek data for one or more option symbols.</span>
+
+<span class="sd">        www.questrade.com/api/documentation/rest-operations/market-calls/markets-quotes-options</span>
+
+<span class="sd">        This method will return a dictionary of the form</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {&quot;optionQuotes&quot;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &quot;underlying&quot;: &quot;MSFT&quot;,</span>
+<span class="sd">                        &quot;underlyingId&quot;: 27426,</span>
+<span class="sd">                        &quot;symbol&quot;: &quot;MSFT20Jan17C70.00&quot;,</span>
+<span class="sd">                        &quot;symbolId&quot;: 7413503,</span>
+<span class="sd">                        &quot;bidPrice&quot;: 4.90,</span>
+<span class="sd">                        &quot;bidSize&quot;: 0,</span>
+<span class="sd">                        &quot;askPrice&quot;: 4.95,</span>
+<span class="sd">                        &quot;askSize&quot;: 0,</span>
+<span class="sd">                        &quot;lastTradePriceTrHrs&quot;: 4.93,</span>
+<span class="sd">                        &quot;lastTradePrice&quot;: 4.93,</span>
+<span class="sd">                        &quot;lastTradeSize&quot;: 0,</span>
+<span class="sd">                        &quot;lastTradeTick&quot;: &quot;Equal&quot;,</span>
+<span class="sd">                        &quot;lastTradeTime&quot;: &quot;2015-08-17T00:00:00.000000-04:00&quot;,</span>
+<span class="sd">                        &quot;volume&quot;: 0,</span>
+<span class="sd">                        &quot;openPrice&quot;: 0,</span>
+<span class="sd">                        &quot;highPricehighPrice&quot;: 4.93,</span>
+<span class="sd">                        &quot;lowPrice&quot;: 0,</span>
+<span class="sd">                        &quot;volatility&quot;: 52.374257,</span>
+<span class="sd">                        &quot;delta&quot;: 0.06985,</span>
+<span class="sd">                        &quot;gamma&quot;: 0.01038,</span>
+<span class="sd">                        &quot;theta&quot;: -0.001406,</span>
+<span class="sd">                        &quot;vega&quot;: 0.074554,</span>
+<span class="sd">                        &quot;rho&quot;: 0.04153,</span>
+<span class="sd">                        &quot;openInterest&quot;: 2292,</span>
+<span class="sd">                        &quot;delay&quot;: 0,</span>
+<span class="sd">                        &quot;isHalted&quot;: False,</span>
+<span class="sd">                        &quot;VWAP&quot;: 0,</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filters: List of dictionaries</span>
+<span class="sd">            List of filters. For example</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                [</span>
+<span class="sd">                    {</span>
+<span class="sd">                     &quot;optionType&quot;: &quot;Call&quot;,</span>
+<span class="sd">                     &quot;underlyingId&quot;: 27426,</span>
+<span class="sd">                     &quot;expiryDate&quot;: &quot;2017-01-20T00:00:00.000000-05:00&quot;,</span>
+<span class="sd">                     &quot;minstrikePrice&quot;: 70,</span>
+<span class="sd">                     &quot;maxstrikePrice&quot;: 80</span>
+<span class="sd">                     }</span>
+<span class="sd">                 ]</span>
+
+<span class="sd">         option_ids: [int]</span>
+<span class="sd">             List of option IDs</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict:</span>
+<span class="sd">             Dictionary of option quotes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Getting option quotes for filter </span><span class="si">{0}</span><span class="s2"> and option_ids </span><span class="si">{1}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">filters</span><span class="p">,</span> <span class="n">option_ids</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">filters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;filters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filters</span>
+        <span class="k">if</span> <span class="n">option_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;optionIds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">option_ids</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;markets/quotes/options&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div></div>
 </pre></div>
 
