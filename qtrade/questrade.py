@@ -515,133 +515,132 @@ class Questrade:
         return response
 
     def get_option_chain(self, ticker: str) -> Dict:
-        """Retrieves an option chain for a particular underlying symbol.
+        """Retrieve an option chain for a particular underlying symbol.
 
-            See https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options
+        https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options
 
-            This method will return a dictionary of the form
+        This method will return a dictionary of the form
 
-            ``{
-                "options": [
+        ``{
+            "options": [
+            {
+              "expiryDate": "2015-01-17T00:00:00.000000-05:00",
+              "description": "BANK OF MONTREAL",
+              "listingExchange": "MX",
+              "optionExerciseType": "American",
+              "chainPerRoot": [
+              {
+                "root": "BMO",
+                "chainPerStrikePrice": [
                 {
-                  "expiryDate": "2015-01-17T00:00:00.000000-05:00",
-                  "description": "BANK OF MONTREAL",
-                  "listingExchange": "MX",
-                  "optionExerciseType": "American",
-                  "chainPerRoot": [
-                  {
-                    "root": "BMO",
-                    "chainPerStrikePrice": [
-                    {
-                      "strikePrice": 60,
-                      "callSymbolId": 6101993,
-                      "putSymbolId": 6102009
-                    },
-                    {
-                      "strikePrice": 62,
-                      "callSymbolId": 6101994,
-                      "putSymbolId": 6102010
-                    },
-                    {
-                      "strikePrice": 64,
-                      "callSymbolId": 6101995,
-                      "putSymbolId": 6102011
-                    }],
-                    "multiplier": 100
-                  }]
-                }]
-              }``
+                  "strikePrice": 60,
+                  "callSymbolId": 6101993,
+                  "putSymbolId": 6102009
+                },
+                {
+                  "strikePrice": 62,
+                  "callSymbolId": 6101994,
+                  "putSymbolId": 6102010
+                },
+                {
+                  "strikePrice": 64,
+                  "callSymbolId": 6101995,
+                  "putSymbolId": 6102011
+                }],
+                "multiplier": 100
+              }]
+            }]
+          }``
 
-            Parameters
-            ----------
-            ticker str
-                Ticker symbol
+        Parameters
+        ----------
+        ticker str
+            Ticker symbol
 
-            Returns
-            -------
-            dict:
-                Dictionary of option chain information for a particular symbol.
-            """
+        Returns
+        -------
+        dict:
+            Dictionary of option chain information for a particular symbol.
+        """
         log.info(f"Getting option chain for ticker {ticker} ...")
         info = self.ticker_information([ticker])
         if not isinstance(info, dict):
             raise Exception(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
         symbolId = info["symbolId"]
-        response = self._send_message(
-            "get", "symbols/" + str(symbolId) + "/options")
+        response = self._send_message("get", "symbols/" + str(symbolId) + "/options")
         return response
 
     def get_option_quotes(self, filters: List, optionIds: List) -> Dict:
-        """Retrieves a single Level 1 market data quote and Greek data for one or more option symbols.
+        """Retrieve a single Level 1 market quote and Greek data for one or more option symbols.
 
-           See https://www.questrade.com/api/documentation/rest-operations/market-calls/markets-quotes-options
+        www.questrade.com/api/documentation/rest-operations/market-calls/markets-quotes-options
 
-           This method will return a dictionary of the form
+        This method will return a dictionary of the form
 
-           ``{
-                “optionQuotes”: [
-                    {
-                        “underlying”: ”MSFT”,
-                        “underlyingId”: 27426,
-                        “symbol”: ”MSFT20Jan17C70.00”,
-                        “symbolId”: 7413503,
-                        “bidPrice”: 4.90,
-                        “bidSize”: 0,
-                        “askPrice”: 4.95,
-                        “askSize”: 0,
-                        “lastTradePriceTrHrs”: 4.93,
-                        “lastTradePrice”: 4.93,
-                        “lastTradeSize”: 0,
-                        “lastTradeTick”: ”Equal”,
-                        “lastTradeTime”: ”2015-08-17T00:00:00.000000-04:00”,
-                        “volume”: 0.
-                        “openPrice”: 0,
-                        “highPricehighPrice”: 4.93,
-                        “lowPrice”: 0,
-                        “volatility”: 52.374257,
-                        “delta”: 0.06985,
-                        “gamma”: 0.01038,
-                        “theta”: -0.001406,
-                        “vega”: 0.074554,
-                        “rho”: 0.04153,
-                        “openInterest”: 2292,
-                        “delay”: 0,
-                       “isHalted”: false,
-                       “VWAP”: 0
-                    }
-                 ]
-            }``
+        ``{
+            "optionQuotes": [
+                {
+                    "underlying": "MSFT",
+                    "underlyingId": 27426,
+                    "symbol": "MSFT20Jan17C70.00",
+                    "symbolId": 7413503,
+                    "bidPrice": 4.90,
+                    "bidSize": 0,
+                    "askPrice": 4.95,
+                    "askSize": 0,
+                    "lastTradePriceTrHrs": 4.93,
+                    "lastTradePrice": 4.93,
+                    "lastTradeSize": 0,
+                    "lastTradeTick": "Equal",
+                    "lastTradeTime": "2015-08-17T00:00:00.000000-04:00",
+                    "volume": 0,
+                    "openPrice": 0,
+                    "highPricehighPrice": 4.93,
+                    "lowPrice": 0,
+                    "volatility": 52.374257,
+                    "delta": 0.06985,
+                    "gamma": 0.01038,
+                    "theta": -0.001406,
+                    "vega": 0.074554,
+                    "rho": 0.04153,
+                    "openInterest": 2292,
+                    "delay": 0,
+                    "isHalted": False,
+                    "VWAP": 0,
+                }
+            ]
+        }``
 
-            Parameters
-            ----------
-            filters List
-                List of filters. For example
+        Parameters
+        ----------
+        filters List
+            List of filters. For example
 
-                ``[
-                    {
-                      “optionType”: ”Call”,
-                      “underlyingId”: 27426,
-                      “expiryDate”: ”2017-01-20T00:00:00.000000-05:00”,
-                      “minstrikePrice”: 70,
-                      “maxstrikePrice”: 80
-                    }
-                  ]``
+            ``[
+                 {
+                   "optionType": "Call",
+                   "underlyingId": 27426,
+                   "expiryDate": "2017-01-20T00:00:00.000000-05:00",
+                   "minstrikePrice": 70,
+                   "maxstrikePrice": 80
+                 }
+             ]``
 
-            optionIds List
-                List of option IDs
+         optionIds List
+             List of option IDs
 
-            Returns
-            -------
-            dict:
-                Dictionary of option quotes.
-            """
-        log.info("Getting option quotes for filter {0} and optionsIds {1} ...".format(
-            filters, optionIds))
+        Returns
+        -------
+        dict:
+             Dictionary of option quotes.
+        """
+        log.info(
+            "Getting option quotes for filter {0} and optionsIds {1} ...".format(filters, optionIds)
+        )
         payload = dict()
         if filters is not None:
             payload["filters"] = filters
         if optionIds is not None:
             payload["optionIds"] = optionIds
-        response = self._send_message(
-            "post", "markets/quotes/options", json=payload)
+        response = self._send_message("post", "markets/quotes/options", json=payload)
         return response
