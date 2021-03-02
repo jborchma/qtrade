@@ -626,17 +626,17 @@ class Questrade:
         filters: List of dictionaries
             List of filters. For example
 
-        .. code-block:: python
+            .. code-block:: python
 
-            [
-                {
-                 "optionType": "Call",
-                 "underlyingId": 27426,
-                 "expiryDate": "2017-01-20T00:00:00.000000-05:00",
-                 "minstrikePrice": 70,
-                 "maxstrikePrice": 80
-                 }
-             ]
+                [
+                    {
+                     "optionType": "Call",
+                     "underlyingId": 27426,
+                     "expiryDate": "2017-01-20T00:00:00.000000-05:00",
+                     "minstrikePrice": 70,
+                     "maxstrikePrice": 80
+                     }
+                 ]
 
          option_ids: [int]
              List of option IDs
