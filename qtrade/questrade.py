@@ -186,7 +186,7 @@ class Questrade:
             Dict with the access token data.
         """
         if from_yaml:
-            old_access_token = get_access_token_yaml("access_token.yml")
+            old_access_token = get_access_token_yaml(yaml_path)
         else:
             old_access_token = self.access_token
 
