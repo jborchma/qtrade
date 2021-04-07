@@ -56,6 +56,90 @@ POSITION_RESPONSE = {
         },
     ]
 }
+
+BALANCE_RESPONSE = {
+    "perCurrencyBalances": [
+        {
+            "currency": "CAD",
+            "cash": -0.0025,
+            "marketValue": 0,
+            "totalEquity": -0.0025,
+            "buyingPower": -0.008325,
+            "maintenanceExcess": -0.0025,
+            "isRealTime": True,
+        },
+        {
+            "currency": "USD",
+            "cash": 6.304468,
+            "marketValue": 124.35,
+            "totalEquity": 130.654468,
+            "buyingPower": 232.282378,
+            "maintenanceExcess": 69.754468,
+            "isRealTime": True,
+        },
+    ],
+    "combinedBalances": [
+        {
+            "currency": "CAD",
+            "cash": 7.921271,
+            "marketValue": 156.289298,
+            "totalEquity": 164.210568,
+            "buyingPower": 291.935782,
+            "maintenanceExcess": 87.668403,
+            "isRealTime": True,
+        },
+        {
+            "currency": "USD",
+            "cash": 6.302479,
+            "marketValue": 124.35,
+            "totalEquity": 130.652479,
+            "buyingPower": 232.275755,
+            "maintenanceExcess": 69.752479,
+            "isRealTime": True,
+        },
+    ],
+    "sodPerCurrencyBalances": [
+        {
+            "currency": "CAD",
+            "cash": -0.0025,
+            "marketValue": 0,
+            "totalEquity": -0.0025,
+            "buyingPower": -0.008325,
+            "maintenanceExcess": -0.0025,
+            "isRealTime": True,
+        },
+        {
+            "currency": "USD",
+            "cash": 6.304468,
+            "marketValue": 126.9,
+            "totalEquity": 133.204468,
+            "buyingPower": 232.282378,
+            "maintenanceExcess": 69.754468,
+            "isRealTime": True,
+        },
+    ],
+    "sodCombinedBalances": [
+        {
+            "currency": "CAD",
+            "cash": 7.921271,
+            "marketValue": 159.494265,
+            "totalEquity": 167.415536,
+            "buyingPower": 291.935782,
+            "maintenanceExcess": 87.668403,
+            "isRealTime": True,
+        },
+        {
+            "currency": "USD",
+            "cash": 6.302479,
+            "marketValue": 126.9,
+            "totalEquity": 133.202479,
+            "buyingPower": 232.275755,
+            "maintenanceExcess": 69.752479,
+            "isRealTime": True,
+        },
+    ],
+}
+
 ACTIVITY_RESPONSE = {
     "activities": [
         {
@@ -254,6 +338,14 @@ def mocked_positions_get(*args, **kwargs):
         return MockResponse(None, 404)
 
 
+def mocked_balances_get(*args, **kwargs):
+    """mocking acct_id requests get"""
+    if args[1] == "http://www.api_url.com/v1/accounts/123/balances":
+        return MockResponse(BALANCE_RESPONSE, 200)
+    else:
+        return MockResponse(None, 404)
+
+
 def mocked_activities_get(*args, **kwargs):
     """mocking activities requests get"""
     if args[1] == "http://www.api_url.com/v1/accounts/123/activities" and kwargs["params"] == {
@@ -404,6 +496,24 @@ def test_get_positions(mock_get):
     assert len(positions) == 2
     assert len(positions[0]) == 12
     assert len(positions[1]) == 12
+
+    with pytest.raises(Exception):
+        _ = qtrade.get_account_positions(987)
+
+
+@mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch.object(Session, "request", side_effect=mocked_balances_get)
+def test_get_balances(mock_get):
+    """This function tests the get account balances method."""
+    qtrade = Questrade(token_yaml="access_token.yml")
+    balances = qtrade.get_account_balances(123)
+    assert len(balances) == 4
+    assert list(balances.keys()) == [
+        "perCurrencyBalances",
+        "combinedBalances",
+        "sodPerCurrencyBalances",
+        "sodCombinedBalances",
+    ]
 
     with pytest.raises(Exception):
         _ = qtrade.get_account_positions(987)
