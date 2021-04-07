@@ -295,6 +295,29 @@ class Questrade:
 
         return positions
 
+    def get_account_balances(self, account_id: int) -> Dict:
+        """Get account balances.
+
+        This method will get the account balance for a given account ID.
+
+        Parameters
+        ----------
+        account_id: int
+            Accound ID for which the activities will be returned.
+
+        Returns
+        -------
+        dict:
+            Dictionary holding balance information
+        """
+        log.info("Getting account activities...")
+        response = self._send_message("get", "accounts/" + str(account_id) + "/balances")
+        try:
+            return response
+        except Exception:
+            print(response)
+            raise Exception
+
     def get_account_activities(self, account_id: int, start_date: str, end_date: str) -> List[Dict]:
         """Get account activities.
 
