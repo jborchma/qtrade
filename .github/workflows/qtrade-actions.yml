@@ -24,4 +24,4 @@ jobs:
           if [ -f requirement-dev.txt ]; then pip install -r requirements-dev.txt; fi
       - name: Test with pytest
         run: |
-          pytest
+          python -m pytest
