@@ -681,3 +681,7 @@ class Questrade:
             payload["optionIds"] = option_ids
         response = self._send_message("post", "markets/quotes/options", json=payload)
         return response
+
+    def __del__(self):
+        """Closes session when class instance is deleted."""
+        self.session.close()
