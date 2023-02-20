@@ -36,7 +36,6 @@ class Questrade:
         token_yaml: Optional[str] = None,
         save_yaml: bool = True,
     ):
-
         self.access_token: TokenDict
         self.headers = None
         self.session = requests.Session()
@@ -681,3 +680,7 @@ class Questrade:
             payload["optionIds"] = option_ids
         response = self._send_message("post", "markets/quotes/options", json=payload)
         return response
+
+    def __del__(self):
+        """Close session when class instance is deleted."""
+        self.session.close()

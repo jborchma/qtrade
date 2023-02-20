@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.com/jborchma/qtrade.svg?branch=master)](https://travis-ci.com/jborchma/qtrade)
+![All tests passing](https://github.com/jborchma/qtrade/actions/workflows/qtrade-actions.yml/badge.svg?branch=master/)
 
 # Qtrade
 
-This is a very basic Python 3.6+ wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
+This is a very basic Python 3.8+ wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
 
 ## Installation
 
