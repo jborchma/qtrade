@@ -282,6 +282,7 @@ api_server: http://www.api_url.com
 expires_in: 1234
 """
 
+
 # taken from https://stackoverflow.com/questions/15753390/how-can-i-mock-requests-and-the-response
 # Since a lot of the methods in the Questrade class use `requests.get` and get the json data,
 # it makes sense to wrap this in a class
@@ -414,6 +415,15 @@ def mocked_option_chain_get(*args, **kwargs):
 
 
 ### TEST FUNCTIONS ###
+
+
+@mock.patch("qtrade.questrade.requests.get", side_effect=mocked_access_token_requests_get)
+def test_del_method_session_close(mock_get):
+    """ "This function tests the successful session closing."""
+    with mock.patch.object(Session, "close") as mock_close:
+        qtrade = Questrade(access_code="hunter2")
+        qtrade.__del__()
+        mock_close.assert_called_once()
 
 
 @mock.patch("qtrade.questrade.requests.get", side_effect=mocked_access_token_requests_get)
