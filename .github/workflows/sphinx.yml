@@ -36,7 +36,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
-          pip install qtrade
+          pip install .
       - name: Debugging information
         run: |
           echo "github.ref:" ${{github.ref}}
@@ -92,7 +92,7 @@ jobs:
           # _gh-pages/branch-* paths, and not including
           # _gh-pages itself.
           find _gh-pages/ -mindepth 1 ! -path '_gh-pages/branch*' -delete
-          rsync -a _build/dirhtml/ _gh-pages/
+          rsync -a dirhtml/ _gh-pages/
       # If a push and not on default branch, then copy the build to
       # _gh-pages/branch/$brname (transforming '/' into '--')
       - name: Copy new build (branch)
