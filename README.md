@@ -1,4 +1,4 @@
-![All tests passing](https://github.com/jborchma/qtrade/actions/workflows/qtrade-actions.yml/badge.svg?branch=master/)
+![All tests passing](https://github.com/jborchma/qtrade/actions/workflows/qtrade-actions.yml/badge.svg)
 
 # Qtrade
 
