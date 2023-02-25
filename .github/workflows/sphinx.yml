@@ -64,7 +64,7 @@ jobs:
           # fixes also need to propagate to other themes):
           #   https://github.com/sphinx-doc/sphinx/pull/8524
           #   https://github.com/readthedocs/sphinx_rtd_theme/pull/1025
-          sed -i 's/url_root="#"/url_root=""/' _build/dirhtml/index.html || true
+          sed -i 's/url_root="#"/url_root=""/' dirhtml/index.html || true
 
 
       # The following supports building all branches and combining on
