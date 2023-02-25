@@ -106,7 +106,7 @@ jobs:
           brname="${brname##refs/heads/}"
           brdir=${brname//\//--}   # replace '/' with '--'
           rm -rf   _gh-pages/branch/${brdir}
-          rsync -a _build/dirhtml/ _gh-pages/branch/${brdir}
+          rsync -a dirhtml/ _gh-pages/branch/${brdir}
       # Go through each branch in _gh-pages/branch/, if it's not a
       # ref, then delete it.
       - name: Delete old feature branches
