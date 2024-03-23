@@ -693,4 +693,3 @@ class Questrade:
     @staticmethod
     def _valid_intervals():
         return set(["OneDay", "OneWeek", "OneMonth", "OneYear"])
-
