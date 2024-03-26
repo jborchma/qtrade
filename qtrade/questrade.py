@@ -480,6 +480,11 @@ class Questrade:
         else:
             log.error(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
             raise Exception(f"Something went wrong retrieving the symbol ID for ticker {ticker}...")
+
+        if interval not in self._valid_intervals():
+            log.error(f"{interval} not a valid interval option.")
+            raise Exception(f"{interval} must be one of {list(self._valid_intervals())}")
+
         payload = {
             "startTime": str(start_date) + "T00:00:00-05:00",
             "endTime": str(end_date) + "T00:00:00-05:00",
@@ -684,3 +689,7 @@ class Questrade:
     def __del__(self):
         """Close session when class instance is deleted."""
         self.session.close()
+
+    @staticmethod
+    def _valid_intervals():
+        return set(["OneDay", "OneWeek", "OneMonth", "OneYear"])
