@@ -347,9 +347,9 @@ class Questrade:
         ----------
         account_id: int
             Accound ID for which the activities will be returned.
-        startDate: str
+        start_date: str
             Start date of time period, format YYYY-MM-DD
-        endDate: str
+        end_date: str
             End date of time period, format YYYY-MM-DD
 
         Returns
@@ -414,9 +414,9 @@ class Questrade:
         ----------
         account_id: int
             Accound ID for which the executionss will be returned.
-        startDate: str
+        start_date: str
             Start date of time period, format YYYY-MM-DD
-        endDate: str
+        end_date: str
             End date of time period, format YYYY-MM-DD
 
         Returns
