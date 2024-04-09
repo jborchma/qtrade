@@ -377,6 +377,73 @@ class Questrade:
 
         return activities
 
+    def get_account_executions(self, account_id: int, start_date: str, end_date: str) -> List[Dict]:
+        """Get account executions.
+
+        This method will get the account executionss for a given account ID in a given time
+        interval.
+
+        This method will in general return a list of dictionaries, where each dictionary represents
+        one account execution. Each dictionary is of the form
+
+        .. code-block:: python
+
+
+            {"symbol": "AAPL",
+            "symbolId": 8049,
+            "quantity":   10,
+            "side":  "Buy",
+            "price": 536.87,
+            "id": 53817310,
+            "orderId": 177106005,
+            "orderChainId": 17710600,
+            "exchangeExecId": "XS1771060050147",
+            "timestam":  2014-03-31T13:38:29.000000-04:00,
+            "notes":  "",
+            "venue":  "LAMP",
+            "totalCost":   5368.7,
+            "orderPlacementCommission": 0,
+            "commission":    4.95,
+            "executionFee": 0,
+            "secFee": 0,
+            "canadianExecutionFee": 0,
+            "parentId": 0,
+           }
+
+        Parameters
+        ----------
+        account_id: int
+            Accound ID for which the executionss will be returned.
+        startDate: str
+            Start date of time period, format YYYY-MM-DD
+        endDate: str
+            End date of time period, format YYYY-MM-DD
+
+        Returns
+        -------
+        list:
+            List of dictionaries, where each list entry is a dictionary with execution
+            information.
+
+        """
+        payload = {
+            "startTime": str(start_date) + "T00:00:00-05:00",
+            "endTime": str(end_date) + "T00:00:00-05:00",
+        }
+
+        log.info("Getting account executions...")
+        response = self._send_message(
+            "get", "accounts/" + str(account_id) + "/executions", params=payload
+        )
+
+        try:
+            executions = response["executions"]
+        except Exception:
+            print(response)
+            raise Exception
+
+        return executions
+
     def ticker_information(self, tickers: Union[str, List[str]]) -> Union[Dict, List[Dict]]:
         """Get ticker information.
 

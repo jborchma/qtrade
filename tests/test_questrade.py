@@ -1,5 +1,6 @@
 """Questrade test module
 """
+
 from unittest import mock
 
 import pytest
@@ -160,6 +161,33 @@ ACTIVITY_RESPONSE = {
         }
     ]
 }
+
+EXECUTION_RESPONSE = {
+    "executions": [
+        {
+            "symbol": "AAPL",
+            "symbolId": 8049,
+            "quantity": 10,
+            "side": "Buy",
+            "price": 536.87,
+            "id": 53817310,
+            "orderId": 177106005,
+            "orderChainId": 17710600,
+            "exchangeExecId": "XS1771060050147",
+            "timestam": "2014-03-31T13:38:29.000000-04:00",
+            "notes": "",
+            "venue": "LAMP",
+            "totalCost": 5368.7,
+            "orderPlacementCommission": 0,
+            "commission": 4.95,
+            "executionFee": 0,
+            "secFee": 0,
+            "canadianExecutionFee": 0,
+            "parentId": 0,
+        }
+    ]
+}
+
 TICKER_INFO = {
     "averageVol20Days": 2,
     "averageVol3Months": 4,
@@ -358,6 +386,17 @@ def mocked_activities_get(*args, **kwargs):
         return MockResponse(None, 404)
 
 
+def mocked_executions_get(*args, **kwargs):
+    """mocking executions requests get"""
+    if args[1] == "http://www.api_url.com/v1/accounts/123/executions" and kwargs["params"] == {
+        "endTime": "2018-08-10T00:00:00-05:00",
+        "startTime": "2018-08-07T00:00:00-05:00",
+    }:
+        return MockResponse(EXECUTION_RESPONSE, 200)
+    else:
+        return MockResponse(None, 404)
+
+
 def mocked_ticker_get(*args, **kwargs):
     """mocking ticker info requests get"""
     if args[1] == "http://www.api_url.com/v1/symbols" and kwargs["params"] == {"names": "XYZ"}:
@@ -542,6 +581,21 @@ def test_get_activity(mock_get):
 
     with pytest.raises(Exception):
         _ = qtrade.get_account_activities(987, "2018-08-07", "2018-08-10")
+
+
+@mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
+@mock.patch.object(Session, "request", side_effect=mocked_executions_get)
+def test_get_execution(mock_get):
+    """This function tests the get account executions method."""
+    qtrade = Questrade(token_yaml="access_token.yml")
+    executions = qtrade.get_account_executions(123, "2018-08-07", "2018-08-10")
+    assert executions[0]["quantity"] == 10
+    assert executions[0]["side"] == "Buy"
+    assert len(executions) == 1
+    assert len(executions[0]) == 19
+
+    with pytest.raises(Exception):
+        _ = qtrade.get_account_executions(987, "2018-08-07", "2018-08-10")
 
 
 @mock.patch("builtins.open", mock.mock_open(read_data=ACCESS_TOKEN_YAML))
