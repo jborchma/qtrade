@@ -759,8 +759,8 @@ class Questrade:
 
     @staticmethod
     def _valid_intervals():
-        return set(["OneMinute", "TwoMinutes ", "ThreeMinutes", "FourMinutes ", "FiveMinutes",
-            "TenMinutes ", "FifteenMinutes", "TwentyMinutes", "HalfHour", "OneHour", "TwoHours",
+        return set(["OneMinute", "TwoMinutes", "ThreeMinutes", "FourMinutes", "FiveMinutes",
+            "TenMinutes", "FifteenMinutes", "TwentyMinutes", "HalfHour", "OneHour", "TwoHours",
             "FourHours", "OneDay", "OneWeek", "OneMonth", "OneYear"])
 
 
