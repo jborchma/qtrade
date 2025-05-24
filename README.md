@@ -2,7 +2,7 @@
 
 # Qtrade
 
-This is a very basic Python 3.8+ wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
+This is a very basic Python 3.9+ wrapper for the [Questrade API](https://www.questrade.com/api/documentation/getting-started), a Canadian low cost broker.
 
 ## Installation
 
