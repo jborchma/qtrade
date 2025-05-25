@@ -1,0 +1,914 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qtrade.questrade &mdash; Qtrade 0.6.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2bd037f0"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Qtrade
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction to Qtrade</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">qtrade</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Qtrade</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qtrade.questrade</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qtrade.questrade</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Core module for Questrade API wrapper.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenDict</span><span class="p">,</span> <span class="n">get_access_token_yaml</span><span class="p">,</span> <span class="n">validate_access_token</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>  <span class="c1"># pylint: disable=C0103</span>
+
+<span class="n">TOKEN_URL</span> <span class="o">=</span> <span class="s2">&quot;https://login.questrade.com/oauth2/token?grant_type=refresh_token&amp;refresh_token=&quot;</span>
+
+
+<div class="viewcode-block" id="Questrade">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Questrade</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Questrade baseclass.</span>
+
+<span class="sd">    This class holds the methods to get access tokens, refresh access tokens as well as get</span>
+<span class="sd">    stock quotes and portfolio overview. An instance of the class needs to be either initialized</span>
+<span class="sd">    with an access_code or the path of a access token yaml file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    access_code: str, optional</span>
+<span class="sd">        Access code from Questrade</span>
+<span class="sd">    token_yaml: str, optional</span>
+<span class="sd">        Path of the yaml-file holding the token payload</span>
+<span class="sd">    save_yaml: bool, optional</span>
+<span class="sd">        Boolean to indicate if the token payload will be saved in a yaml-file. Default True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">access_code</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">token_yaml</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_yaml</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">:</span> <span class="n">TokenDict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_code</span> <span class="o">=</span> <span class="n">access_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_yaml</span> <span class="o">=</span> <span class="n">token_yaml</span>
+
+        <span class="k">if</span> <span class="n">access_code</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_yaml</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">get_access_token_yaml</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_yaml</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;token_type&quot;</span><span class="p">]</span>
+                <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+            <span class="c1"># add headers to session</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_access_token</span><span class="p">(</span><span class="n">save_yaml</span><span class="o">=</span><span class="n">save_yaml</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_send_message</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">json</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># pylint: disable=R0913</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send an API request.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        method: str</span>
+<span class="sd">            HTTP method (get, post, delete, etc.)</span>
+<span class="sd">        endpoint: str</span>
+<span class="sd">            Endpoint (to be added to base URL)</span>
+<span class="sd">        params: dict, optional</span>
+<span class="sd">            HTTP request parameters</span>
+<span class="sd">        data: dict, optional</span>
+<span class="sd">            JSON-encoded string payload for POST</span>
+<span class="sd">        json: dict, optional</span>
+<span class="sd">            Dictionary payload for POST</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict/list:</span>
+<span class="sd">            JSON response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/v1/&quot;</span> <span class="o">+</span> <span class="n">endpoint</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Access token not set...&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Access token not set...&quot;</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">json</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Questrade.save_token_to_yaml">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.save_token_to_yaml">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_token_to_yaml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;access_token.yml&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the token payload as a yaml-file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        yaml_path: str, optional</span>
+<span class="sd">            Path of the yaml-file. If the file already exists, it will be overwritten. Defaults to</span>
+<span class="sd">            access_token.yml</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yaml_file</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Saving access token to yaml file...&quot;</span><span class="p">)</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="n">yaml_file</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_access_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">save_yaml</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;access_token.yml&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenDict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get access token.</span>
+
+<span class="sd">        This internal method gets the access token from the access code and optionally saves it in</span>
+<span class="sd">        access_token.yaml.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        save_yaml: bool, optional</span>
+<span class="sd">            Boolean to indicate if the token payload will be saved in a yaml-file. Default False.</span>
+<span class="sd">        yaml_path: str, optional</span>
+<span class="sd">            Path of the yaml-file that will be saved. If the file already exists, it will be</span>
+<span class="sd">            overwritten. Defaults to access_token.yml</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dict with the access token data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">TOKEN_URL</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_code</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Getting access token...&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="c1"># validate response</span>
+        <span class="n">validate_access_token</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">response</span>
+
+        <span class="c1"># clean the api_server entry of the escape characters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># set headers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;token_type&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+
+        <span class="c1"># save access token</span>
+        <span class="k">if</span> <span class="n">save_yaml</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Saving yaml file to </span><span class="si">{}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">))</span>  <span class="c1"># pylint: disable=W1202</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_token_to_yaml</span><span class="p">(</span><span class="n">yaml_path</span><span class="o">=</span><span class="n">yaml_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+
+<div class="viewcode-block" id="Questrade.refresh_access_token">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.refresh_access_token">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">refresh_access_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">from_yaml</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;access_token.yml&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenDict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Refresh access token.</span>
+
+<span class="sd">        This method refreshes the access token. This only works if the overall access has not yet</span>
+<span class="sd">        expired. By default it will look for the yaml-file, but it could also look for the internal</span>
+<span class="sd">        state</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        from_yaml: bool, optional [False]</span>
+<span class="sd">            This parameter controls if the refresh token is sourced from a yaml file</span>
+<span class="sd">            or if the attribute `access_token` is used (default). If True, the yaml-file will be</span>
+<span class="sd">            updated.</span>
+<span class="sd">        yaml_path: str, optional</span>
+<span class="sd">            Path of the yaml-file that will be updated. Defaults to access_token.yml</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dict with the access token data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">from_yaml</span><span class="p">:</span>
+            <span class="n">old_access_token</span> <span class="o">=</span> <span class="n">get_access_token_yaml</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">old_access_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">TOKEN_URL</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">old_access_token</span><span class="p">[</span><span class="s2">&quot;refresh_token&quot;</span><span class="p">])</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Refreshing access token...&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="c1"># validate response</span>
+        <span class="n">validate_access_token</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="p">)</span>
+        <span class="c1"># set access token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">response</span>
+
+        <span class="c1"># clean the api_server entry of the escape characters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># set headers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;token_type&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># update headers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+
+        <span class="c1"># save access token</span>
+        <span class="k">if</span> <span class="n">from_yaml</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_token_to_yaml</span><span class="p">(</span><span class="n">yaml_path</span><span class="o">=</span><span class="n">yaml_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_account_id">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_account_id">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get account ID.</span>
+
+<span class="sd">        This method gets the accounts ID connected to the token.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list:</span>
+<span class="sd">            List of account IDs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Getting account ID...&quot;</span><span class="p">)</span>
+        <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;accounts&quot;</span><span class="p">)</span>
+
+        <span class="n">account_id</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">account</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;accounts&quot;</span><span class="p">]:</span>
+                <span class="n">account_id</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">account</span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_id</span> <span class="o">=</span> <span class="n">account_id</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">return</span> <span class="n">account_id</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_account_positions">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_account_positions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get account positions.</span>
+
+<span class="sd">        This method will get the positions for the account ID connected to the token.</span>
+
+<span class="sd">        The returned data is a list where for each position, a dictionary with the following</span>
+<span class="sd">        data will be returned:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {&#39;averageEntryPrice&#39;: 1000,</span>
+<span class="sd">            &#39;closedPnl&#39;: 0,</span>
+<span class="sd">            &#39;closedQuantity&#39;: 0,</span>
+<span class="sd">            &#39;currentMarketValue&#39;: 3120,</span>
+<span class="sd">            &#39;currentPrice&#39;: 1040,</span>
+<span class="sd">            &#39;isRealTime&#39;: False,</span>
+<span class="sd">            &#39;isUnderReorg&#39;: False,</span>
+<span class="sd">            &#39;openPnl&#39;: 120,</span>
+<span class="sd">            &#39;openQuantity&#39;: 3,</span>
+<span class="sd">            &#39;symbol&#39;: &#39;XYZ&#39;,</span>
+<span class="sd">            &#39;symbolId&#39;: 1234567,</span>
+<span class="sd">            &#39;totalCost&#39;: 3000}</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        account_id: int</span>
+<span class="sd">            Account ID for which the positions will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list:</span>
+<span class="sd">            List of dictionaries, where each list entry is a dictionary with basic position</span>
+<span class="sd">            information.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Getting account positions...&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;accounts/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/positions&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">positions</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span>
+
+        <span class="k">return</span> <span class="n">positions</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_account_balances">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_account_balances">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_balances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get account balances.</span>
+
+<span class="sd">        This method will get the account balance for a given account ID.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        account_id: int</span>
+<span class="sd">            Accound ID for which the activities will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict:</span>
+<span class="sd">            Dictionary holding balance information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Getting account activities...&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;accounts/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/balances&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_account_activities">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_account_activities">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_activities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get account activities.</span>
+
+<span class="sd">        This method will get the account activities for a given account ID in a given time</span>
+<span class="sd">        interval.</span>
+
+<span class="sd">        This method will in general return a list of dictionaries, where each dictionary represents</span>
+<span class="sd">        one trade/account activity. Each dictionary is of the form</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {&#39;action&#39;: &#39;Buy&#39;,</span>
+<span class="sd">            &#39;commission&#39;: -5.01,</span>
+<span class="sd">            &#39;currency&#39;: &#39;CAD&#39;,</span>
+<span class="sd">            &#39;description&#39;: &#39;description text&#39;,</span>
+<span class="sd">            &#39;grossAmount&#39;: -1000,</span>
+<span class="sd">            &#39;netAmount&#39;: -1005.01,</span>
+<span class="sd">            &#39;price&#39;: 10,</span>
+<span class="sd">            &#39;quantity&#39;: 100,</span>
+<span class="sd">            &#39;settlementDate&#39;: &#39;2018-08-09T00:00:00.000000-04:00&#39;,</span>
+<span class="sd">            &#39;symbol&#39;: &#39;XYZ.TO&#39;,</span>
+<span class="sd">            &#39;symbolId&#39;: 1234567,</span>
+<span class="sd">            &#39;tradeDate&#39;: &#39;2018-08-07T00:00:00.000000-04:00&#39;,</span>
+<span class="sd">            &#39;transactionDate&#39;: &#39;2018-08-09T00:00:00.000000-04:00&#39;,</span>
+<span class="sd">            &#39;type&#39;: &#39;Trades&#39;}</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        account_id: int</span>
+<span class="sd">            Accound ID for which the activities will be returned.</span>
+<span class="sd">        start_date: str</span>
+<span class="sd">            Start date of time period, format YYYY-MM-DD</span>
+<span class="sd">        end_date: str</span>
+<span class="sd">            End date of time period, format YYYY-MM-DD</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list:</span>
+<span class="sd">            List of dictionaries, where each list entry is a dictionary with basic order &amp; dividend</span>
+<span class="sd">            information.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;startTime&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;T00:00:00-05:00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;endTime&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;T00:00:00-05:00&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Getting account activities...&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span>
+            <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;accounts/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/activities&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">activities</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="k">return</span> <span class="n">activities</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_account_executions">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_account_executions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_account_executions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get account executions.</span>
+
+<span class="sd">        This method will get the account executionss for a given account ID in a given time</span>
+<span class="sd">        interval.</span>
+
+<span class="sd">        This method will in general return a list of dictionaries, where each dictionary represents</span>
+<span class="sd">        one account execution. Each dictionary is of the form</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+
+<span class="sd">            {&quot;symbol&quot;: &quot;AAPL&quot;,</span>
+<span class="sd">            &quot;symbolId&quot;: 8049,</span>
+<span class="sd">            &quot;quantity&quot;:   10,</span>
+<span class="sd">            &quot;side&quot;:  &quot;Buy&quot;,</span>
+<span class="sd">            &quot;price&quot;: 536.87,</span>
+<span class="sd">            &quot;id&quot;: 53817310,</span>
+<span class="sd">            &quot;orderId&quot;: 177106005,</span>
+<span class="sd">            &quot;orderChainId&quot;: 17710600,</span>
+<span class="sd">            &quot;exchangeExecId&quot;: &quot;XS1771060050147&quot;,</span>
+<span class="sd">            &quot;timestam&quot;:  2014-03-31T13:38:29.000000-04:00,</span>
+<span class="sd">            &quot;notes&quot;:  &quot;&quot;,</span>
+<span class="sd">            &quot;venue&quot;:  &quot;LAMP&quot;,</span>
+<span class="sd">            &quot;totalCost&quot;:   5368.7,</span>
+<span class="sd">            &quot;orderPlacementCommission&quot;: 0,</span>
+<span class="sd">            &quot;commission&quot;:    4.95,</span>
+<span class="sd">            &quot;executionFee&quot;: 0,</span>
+<span class="sd">            &quot;secFee&quot;: 0,</span>
+<span class="sd">            &quot;canadianExecutionFee&quot;: 0,</span>
+<span class="sd">            &quot;parentId&quot;: 0,</span>
+<span class="sd">           }</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        account_id: int</span>
+<span class="sd">            Accound ID for which the executionss will be returned.</span>
+<span class="sd">        start_date: str</span>
+<span class="sd">            Start date of time period, format YYYY-MM-DD</span>
+<span class="sd">        end_date: str</span>
+<span class="sd">            End date of time period, format YYYY-MM-DD</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list:</span>
+<span class="sd">            List of dictionaries, where each list entry is a dictionary with execution</span>
+<span class="sd">            information.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;startTime&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;T00:00:00-05:00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;endTime&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;T00:00:00-05:00&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Getting account executions...&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span>
+            <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;accounts/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/executions&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">executions</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;executions&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="k">return</span> <span class="n">executions</span></div>
+
+
+<div class="viewcode-block" id="Questrade.ticker_information">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.ticker_information">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ticker_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tickers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ticker information.</span>
+
+<span class="sd">        This function gets information such as a quote for a single ticker or a list of tickers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tickers: str or [str]</span>
+<span class="sd">            List of tickers or a single ticker</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict or [dict]</span>
+<span class="sd">            Dictionary with ticker information or list of dictionaries with ticker information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">tickers</span> <span class="o">=</span> <span class="p">[</span><span class="n">tickers</span><span class="p">]</span>
+
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;names&quot;</span><span class="p">:</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tickers</span><span class="p">)}</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Getting ticker data...&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;symbols&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">symbols</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;symbols&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tickers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">symbols</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">symbols</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_quote">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_quote">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_quote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tickers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get quote.</span>
+
+<span class="sd">        This function gets information such as a quote for a single ticker or a list of tickers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tickers: [str]</span>
+<span class="sd">            List of tickers</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict or [dict]</span>
+<span class="sd">            Dictionary with quotes or list of dictionaries with quotes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tickers</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">tickers</span> <span class="o">=</span> <span class="p">[</span><span class="n">tickers</span><span class="p">]</span>
+
+        <span class="c1"># translate tickers to IDs</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ticker_information</span><span class="p">(</span><span class="n">tickers</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tickers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;symbolId&quot;</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">stock</span><span class="p">[</span><span class="s2">&quot;symbolId&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">stock</span> <span class="ow">in</span> <span class="n">info</span><span class="p">]</span>
+
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">ids</span><span class="p">))}</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Getting quote...&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;markets/quotes&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">quotes</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;quotes&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">quotes</span> <span class="o">=</span> <span class="n">quotes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">quotes</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_historical_data">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_historical_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_historical_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get historical ticker data.</span>
+
+<span class="sd">        This method get gets historical data for a time interval and a defined time frequency.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ticker: str</span>
+<span class="sd">            Ticker Symbol</span>
+<span class="sd">        start_date: str</span>
+<span class="sd">            Date in the format YYYY-MM-DD</span>
+<span class="sd">        end_date: str</span>
+<span class="sd">            Date in the format YYYY-MM-DD</span>
+<span class="sd">        interval: str</span>
+<span class="sd">            Time frequency, i.e. OneDay.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list:</span>
+<span class="sd">            list of historical data for each interval. The list is ordered by date.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># translate tickers to IDs</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ticker_information</span><span class="p">(</span><span class="n">ticker</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">ids</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;symbolId&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong retrieving the symbol ID for ticker </span><span class="si">{</span><span class="n">ticker</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong retrieving the symbol ID for ticker </span><span class="si">{</span><span class="n">ticker</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">interval</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valid_intervals</span><span class="p">():</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">interval</span><span class="si">}</span><span class="s2"> not a valid interval option.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">interval</span><span class="si">}</span><span class="s2"> must be one of </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_valid_intervals</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;startTime&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;T00:00:00-05:00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;endTime&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;T00:00:00-05:00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;interval&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">interval</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Getting historical data for </span><span class="si">{0}</span><span class="s2"> from </span><span class="si">{1}</span><span class="s2"> to </span><span class="si">{2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ticker</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;markets/candles/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ids</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">quotes</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;candles&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="k">return</span> <span class="n">quotes</span></div>
+
+
+<div class="viewcode-block" id="Questrade.submit_order">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.submit_order">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acct_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">order_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Submit order.</span>
+
+<span class="sd">        This method submits an order to Questrade. Note that currently only partner apps can submit</span>
+<span class="sd">        orders to the Questrade API. The order information is provided in a dictionary of the form</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {&#39;accountNumber&#39;: 1234567,</span>
+<span class="sd">            &#39;symbolId&#39;: 3925293,</span>
+<span class="sd">            &#39;quantity&#39;: 1,</span>
+<span class="sd">            &#39;icebergQuantity&#39;: 1,</span>
+<span class="sd">            &#39;limitPrice&#39;: 57.58,</span>
+<span class="sd">            &#39;isAllOrNone&#39;: True,</span>
+<span class="sd">            &#39;isAnonymous&#39;: False,</span>
+<span class="sd">            &#39;orderType&#39;: &#39;Limit&#39;,</span>
+<span class="sd">            &#39;timeInForce&#39;: &#39;GoodTillCanceled&#39;,</span>
+<span class="sd">            &#39;action&#39;: &#39;Buy&#39;,</span>
+<span class="sd">            &#39;primaryRoute&#39;: &#39;AUTO&#39;,</span>
+<span class="sd">            &#39;secondaryRoute&#39;: &#39;AUTO&#39;}</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        acct_id: int</span>
+<span class="sd">            Account ID for the account to which the order is to be submitted.</span>
+<span class="sd">        order_dict: dict</span>
+<span class="sd">            Dictionary with the necessary order entries.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary with the API response to the order submission.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">[</span><span class="s2">&quot;api_server&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/v1/accounts/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">acct_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/orders&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Posting order...&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">order_dict</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span>
+            <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;accounts/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">acct_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/orders&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">order_dict</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_option_chain">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_option_chain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_option_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve an option chain for a particular underlying symbol.</span>
+
+<span class="sd">        https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options</span>
+
+<span class="sd">        This method will return a dictionary of the form</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;options&quot;: [</span>
+<span class="sd">                {</span>
+<span class="sd">                  &quot;expiryDate&quot;: &quot;2015-01-17T00:00:00.000000-05:00&quot;,</span>
+<span class="sd">                  &quot;description&quot;: &quot;BANK OF MONTREAL&quot;,</span>
+<span class="sd">                  &quot;listingExchange&quot;: &quot;MX&quot;,</span>
+<span class="sd">                  &quot;optionExerciseType&quot;: &quot;American&quot;,</span>
+<span class="sd">                  &quot;chainPerRoot&quot;: [</span>
+<span class="sd">                  {</span>
+<span class="sd">                    &quot;root&quot;: &quot;BMO&quot;,</span>
+<span class="sd">                    &quot;chainPerStrikePrice&quot;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                      &quot;strikePrice&quot;: 60,</span>
+<span class="sd">                      &quot;callSymbolId&quot;: 6101993,</span>
+<span class="sd">                      &quot;putSymbolId&quot;: 6102009</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                      &quot;strikePrice&quot;: 62,</span>
+<span class="sd">                      &quot;callSymbolId&quot;: 6101994,</span>
+<span class="sd">                      &quot;putSymbolId&quot;: 6102010</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                      &quot;strikePrice&quot;: 64,</span>
+<span class="sd">                      &quot;callSymbolId&quot;: 6101995,</span>
+<span class="sd">                      &quot;putSymbolId&quot;: 6102011</span>
+<span class="sd">                    }],</span>
+<span class="sd">                    &quot;multiplier&quot;: 100</span>
+<span class="sd">                  }]</span>
+<span class="sd">                }]</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ticker: str</span>
+<span class="sd">            Ticker symbol</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict:</span>
+<span class="sd">            Dictionary of option chain information for a particular symbol.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Getting option chain for ticker </span><span class="si">{</span><span class="n">ticker</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ticker_information</span><span class="p">([</span><span class="n">ticker</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong retrieving the symbol ID for ticker </span><span class="si">{</span><span class="n">ticker</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Something went wrong retrieving the symbol ID for ticker </span><span class="si">{</span><span class="n">ticker</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="n">symbol_id</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;symbolId&quot;</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;symbols/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbol_id</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/options&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="Questrade.get_option_quotes">
+<a class="viewcode-back" href="../../api/qtrade.html#qtrade.questrade.Questrade.get_option_quotes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_option_quotes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span> <span class="n">option_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a single Level 1 market quote and Greek data for one or more option symbols.</span>
+
+<span class="sd">        www.questrade.com/api/documentation/rest-operations/market-calls/markets-quotes-options</span>
+
+<span class="sd">        This method will return a dictionary of the form</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {&quot;optionQuotes&quot;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &quot;underlying&quot;: &quot;MSFT&quot;,</span>
+<span class="sd">                        &quot;underlyingId&quot;: 27426,</span>
+<span class="sd">                        &quot;symbol&quot;: &quot;MSFT20Jan17C70.00&quot;,</span>
+<span class="sd">                        &quot;symbolId&quot;: 7413503,</span>
+<span class="sd">                        &quot;bidPrice&quot;: 4.90,</span>
+<span class="sd">                        &quot;bidSize&quot;: 0,</span>
+<span class="sd">                        &quot;askPrice&quot;: 4.95,</span>
+<span class="sd">                        &quot;askSize&quot;: 0,</span>
+<span class="sd">                        &quot;lastTradePriceTrHrs&quot;: 4.93,</span>
+<span class="sd">                        &quot;lastTradePrice&quot;: 4.93,</span>
+<span class="sd">                        &quot;lastTradeSize&quot;: 0,</span>
+<span class="sd">                        &quot;lastTradeTick&quot;: &quot;Equal&quot;,</span>
+<span class="sd">                        &quot;lastTradeTime&quot;: &quot;2015-08-17T00:00:00.000000-04:00&quot;,</span>
+<span class="sd">                        &quot;volume&quot;: 0,</span>
+<span class="sd">                        &quot;openPrice&quot;: 0,</span>
+<span class="sd">                        &quot;highPricehighPrice&quot;: 4.93,</span>
+<span class="sd">                        &quot;lowPrice&quot;: 0,</span>
+<span class="sd">                        &quot;volatility&quot;: 52.374257,</span>
+<span class="sd">                        &quot;delta&quot;: 0.06985,</span>
+<span class="sd">                        &quot;gamma&quot;: 0.01038,</span>
+<span class="sd">                        &quot;theta&quot;: -0.001406,</span>
+<span class="sd">                        &quot;vega&quot;: 0.074554,</span>
+<span class="sd">                        &quot;rho&quot;: 0.04153,</span>
+<span class="sd">                        &quot;openInterest&quot;: 2292,</span>
+<span class="sd">                        &quot;delay&quot;: 0,</span>
+<span class="sd">                        &quot;isHalted&quot;: False,</span>
+<span class="sd">                        &quot;VWAP&quot;: 0,</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filters: List of dictionaries</span>
+<span class="sd">            List of filters. For example</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                [</span>
+<span class="sd">                    {</span>
+<span class="sd">                     &quot;optionType&quot;: &quot;Call&quot;,</span>
+<span class="sd">                     &quot;underlyingId&quot;: 27426,</span>
+<span class="sd">                     &quot;expiryDate&quot;: &quot;2017-01-20T00:00:00.000000-05:00&quot;,</span>
+<span class="sd">                     &quot;minstrikePrice&quot;: 70,</span>
+<span class="sd">                     &quot;maxstrikePrice&quot;: 80</span>
+<span class="sd">                     }</span>
+<span class="sd">                 ]</span>
+
+<span class="sd">         option_ids: [int]</span>
+<span class="sd">             List of option IDs</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict:</span>
+<span class="sd">             Dictionary of option quotes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Getting option quotes for filter </span><span class="si">{0}</span><span class="s2"> and option_ids </span><span class="si">{1}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">filters</span><span class="p">,</span> <span class="n">option_ids</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">filters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;filters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filters</span>
+        <span class="k">if</span> <span class="n">option_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;optionIds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">option_ids</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_message</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;markets/quotes/options&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close session when class instance is deleted.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_valid_intervals</span><span class="p">():</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">([</span><span class="s2">&quot;OneMinute&quot;</span><span class="p">,</span> <span class="s2">&quot;TwoMinutes&quot;</span><span class="p">,</span> <span class="s2">&quot;ThreeMinutes&quot;</span><span class="p">,</span> <span class="s2">&quot;FourMinutes&quot;</span><span class="p">,</span> 
+        	<span class="s2">&quot;FiveMinutes&quot;</span><span class="p">,</span> <span class="s2">&quot;TenMinutes&quot;</span><span class="p">,</span> <span class="s2">&quot;FifteenMinutes&quot;</span><span class="p">,</span> <span class="s2">&quot;TwentyMinutes&quot;</span><span class="p">,</span> 
+        	<span class="s2">&quot;HalfHour&quot;</span><span class="p">,</span> <span class="s2">&quot;OneHour&quot;</span><span class="p">,</span> <span class="s2">&quot;TwoHours&quot;</span><span class="p">,</span> <span class="s2">&quot;FourHours&quot;</span><span class="p">,</span> 
+        	<span class="s2">&quot;OneDay&quot;</span><span class="p">,</span> <span class="s2">&quot;OneWeek&quot;</span><span class="p">,</span> <span class="s2">&quot;OneMonth&quot;</span><span class="p">,</span> <span class="s2">&quot;OneYear&quot;</span><span class="p">])</span></div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Jan Borchmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

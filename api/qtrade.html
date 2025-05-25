@@ -1,0 +1,634 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qtrade package &mdash; Qtrade 0.6.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2bd037f0"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="qtrade" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Qtrade
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Introduction to Qtrade</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">qtrade</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">qtrade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-qtrade.questrade">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#qtrade.questrade.Questrade"><code class="docutils literal notranslate"><span class="pre">Questrade</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qtrade.utility.TokenDict"><code class="docutils literal notranslate"><span class="pre">TokenDict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qtrade.utility.get_access_token_yaml"><code class="docutils literal notranslate"><span class="pre">get_access_token_yaml()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qtrade.utility.validate_access_token"><code class="docutils literal notranslate"><span class="pre">validate_access_token()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-qtrade">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Qtrade</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">qtrade</a></li>
+      <li class="breadcrumb-item active">qtrade package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/qtrade.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="qtrade-package">
+<h1>qtrade package<a class="headerlink" href="#qtrade-package" title="Link to this heading"></a></h1>
+<section id="module-qtrade.questrade">
+<span id="submodules"></span><h2>Submodules<a class="headerlink" href="#module-qtrade.questrade" title="Link to this heading"></a></h2>
+<p>Core module for Questrade API wrapper.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qtrade.questrade.</span></span><span class="sig-name descname"><span class="pre">Questrade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_yaml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_yaml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Questrade baseclass.</p>
+<p>This class holds the methods to get access tokens, refresh access tokens as well as get
+stock quotes and portfolio overview. An instance of the class needs to be either initialized
+with an access_code or the path of a access token yaml file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>access_code</strong> (<em>str, optional</em>) – Access code from Questrade</p></li>
+<li><p><strong>token_yaml</strong> (<em>str, optional</em>) – Path of the yaml-file holding the token payload</p></li>
+<li><p><strong>save_yaml</strong> (<em>bool, optional</em>) – Boolean to indicate if the token payload will be saved in a yaml-file. Default True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_account_activities">
+<span class="sig-name descname"><span class="pre">get_account_activities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_account_activities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_account_activities" title="Link to this definition"></a></dt>
+<dd><p>Get account activities.</p>
+<p>This method will get the account activities for a given account ID in a given time
+interval.</p>
+<p>This method will in general return a list of dictionaries, where each dictionary represents
+one trade/account activity. Each dictionary is of the form</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="s1">&#39;Buy&#39;</span><span class="p">,</span>
+<span class="s1">&#39;commission&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.01</span><span class="p">,</span>
+<span class="s1">&#39;currency&#39;</span><span class="p">:</span> <span class="s1">&#39;CAD&#39;</span><span class="p">,</span>
+<span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;description text&#39;</span><span class="p">,</span>
+<span class="s1">&#39;grossAmount&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1000</span><span class="p">,</span>
+<span class="s1">&#39;netAmount&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1005.01</span><span class="p">,</span>
+<span class="s1">&#39;price&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<span class="s1">&#39;quantity&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+<span class="s1">&#39;settlementDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-08-09T00:00:00.000000-04:00&#39;</span><span class="p">,</span>
+<span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="s1">&#39;XYZ.TO&#39;</span><span class="p">,</span>
+<span class="s1">&#39;symbolId&#39;</span><span class="p">:</span> <span class="mi">1234567</span><span class="p">,</span>
+<span class="s1">&#39;tradeDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-08-07T00:00:00.000000-04:00&#39;</span><span class="p">,</span>
+<span class="s1">&#39;transactionDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-08-09T00:00:00.000000-04:00&#39;</span><span class="p">,</span>
+<span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Trades&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>account_id</strong> (<em>int</em>) – Accound ID for which the activities will be returned.</p></li>
+<li><p><strong>start_date</strong> (<em>str</em>) – Start date of time period, format YYYY-MM-DD</p></li>
+<li><p><strong>end_date</strong> (<em>str</em>) – End date of time period, format YYYY-MM-DD</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of dictionaries, where each list entry is a dictionary with basic order &amp; dividend
+information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_account_balances">
+<span class="sig-name descname"><span class="pre">get_account_balances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_account_balances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_account_balances" title="Link to this definition"></a></dt>
+<dd><p>Get account balances.</p>
+<p>This method will get the account balance for a given account ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>account_id</strong> (<em>int</em>) – Accound ID for which the activities will be returned.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary holding balance information</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_account_executions">
+<span class="sig-name descname"><span class="pre">get_account_executions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_account_executions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_account_executions" title="Link to this definition"></a></dt>
+<dd><p>Get account executions.</p>
+<p>This method will get the account executionss for a given account ID in a given time
+interval.</p>
+<p>This method will in general return a list of dictionaries, where each dictionary represents
+one account execution. Each dictionary is of the form</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;AAPL&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;symbolId&quot;</span><span class="p">:</span> <span class="mi">8049</span><span class="p">,</span>
+ <span class="s2">&quot;quantity&quot;</span><span class="p">:</span>   <span class="mi">10</span><span class="p">,</span>
+ <span class="s2">&quot;side&quot;</span><span class="p">:</span>  <span class="s2">&quot;Buy&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="mf">536.87</span><span class="p">,</span>
+ <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">53817310</span><span class="p">,</span>
+ <span class="s2">&quot;orderId&quot;</span><span class="p">:</span> <span class="mi">177106005</span><span class="p">,</span>
+ <span class="s2">&quot;orderChainId&quot;</span><span class="p">:</span> <span class="mi">17710600</span><span class="p">,</span>
+ <span class="s2">&quot;exchangeExecId&quot;</span><span class="p">:</span> <span class="s2">&quot;XS1771060050147&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;timestam&quot;</span><span class="p">:</span>  <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">31</span><span class="n">T13</span><span class="p">:</span><span class="mi">38</span><span class="p">:</span><span class="mf">29.000000</span><span class="o">-</span><span class="mi">04</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span>
+ <span class="s2">&quot;notes&quot;</span><span class="p">:</span>  <span class="s2">&quot;&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;venue&quot;</span><span class="p">:</span>  <span class="s2">&quot;LAMP&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;totalCost&quot;</span><span class="p">:</span>   <span class="mf">5368.7</span><span class="p">,</span>
+ <span class="s2">&quot;orderPlacementCommission&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+ <span class="s2">&quot;commission&quot;</span><span class="p">:</span>    <span class="mf">4.95</span><span class="p">,</span>
+ <span class="s2">&quot;executionFee&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+ <span class="s2">&quot;secFee&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+ <span class="s2">&quot;canadianExecutionFee&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+ <span class="s2">&quot;parentId&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>account_id</strong> (<em>int</em>) – Accound ID for which the executionss will be returned.</p></li>
+<li><p><strong>start_date</strong> (<em>str</em>) – Start date of time period, format YYYY-MM-DD</p></li>
+<li><p><strong>end_date</strong> (<em>str</em>) – End date of time period, format YYYY-MM-DD</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of dictionaries, where each list entry is a dictionary with execution
+information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_account_id">
+<span class="sig-name descname"><span class="pre">get_account_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_account_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_account_id" title="Link to this definition"></a></dt>
+<dd><p>Get account ID.</p>
+<p>This method gets the accounts ID connected to the token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of account IDs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_account_positions">
+<span class="sig-name descname"><span class="pre">get_account_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_account_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_account_positions" title="Link to this definition"></a></dt>
+<dd><p>Get account positions.</p>
+<p>This method will get the positions for the account ID connected to the token.</p>
+<p>The returned data is a list where for each position, a dictionary with the following
+data will be returned:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;averageEntryPrice&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+<span class="s1">&#39;closedPnl&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="s1">&#39;closedQuantity&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="s1">&#39;currentMarketValue&#39;</span><span class="p">:</span> <span class="mi">3120</span><span class="p">,</span>
+<span class="s1">&#39;currentPrice&#39;</span><span class="p">:</span> <span class="mi">1040</span><span class="p">,</span>
+<span class="s1">&#39;isRealTime&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="s1">&#39;isUnderReorg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="s1">&#39;openPnl&#39;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+<span class="s1">&#39;openQuantity&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="s1">&#39;XYZ&#39;</span><span class="p">,</span>
+<span class="s1">&#39;symbolId&#39;</span><span class="p">:</span> <span class="mi">1234567</span><span class="p">,</span>
+<span class="s1">&#39;totalCost&#39;</span><span class="p">:</span> <span class="mi">3000</span><span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>account_id</strong> (<em>int</em>) – Account ID for which the positions will be returned.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of dictionaries, where each list entry is a dictionary with basic position
+information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_historical_data">
+<span class="sig-name descname"><span class="pre">get_historical_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_historical_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_historical_data" title="Link to this definition"></a></dt>
+<dd><p>Get historical ticker data.</p>
+<p>This method get gets historical data for a time interval and a defined time frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ticker</strong> (<em>str</em>) – Ticker Symbol</p></li>
+<li><p><strong>start_date</strong> (<em>str</em>) – Date in the format YYYY-MM-DD</p></li>
+<li><p><strong>end_date</strong> (<em>str</em>) – Date in the format YYYY-MM-DD</p></li>
+<li><p><strong>interval</strong> (<em>str</em>) – Time frequency, i.e. OneDay.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of historical data for each interval. The list is ordered by date.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_option_chain">
+<span class="sig-name descname"><span class="pre">get_option_chain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_option_chain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_option_chain" title="Link to this definition"></a></dt>
+<dd><p>Retrieve an option chain for a particular underlying symbol.</p>
+<p><a class="reference external" href="https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options">https://www.questrade.com/api/documentation/rest-operations/market-calls/symbols-id-options</a></p>
+<p>This method will return a dictionary of the form</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;expiryDate&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-01-17T00:00:00.000000-05:00&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;BANK OF MONTREAL&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;listingExchange&quot;</span><span class="p">:</span> <span class="s2">&quot;MX&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;optionExerciseType&quot;</span><span class="p">:</span> <span class="s2">&quot;American&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;chainPerRoot&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="s2">&quot;root&quot;</span><span class="p">:</span> <span class="s2">&quot;BMO&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;chainPerStrikePrice&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;strikePrice&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+          <span class="s2">&quot;callSymbolId&quot;</span><span class="p">:</span> <span class="mi">6101993</span><span class="p">,</span>
+          <span class="s2">&quot;putSymbolId&quot;</span><span class="p">:</span> <span class="mi">6102009</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;strikePrice&quot;</span><span class="p">:</span> <span class="mi">62</span><span class="p">,</span>
+          <span class="s2">&quot;callSymbolId&quot;</span><span class="p">:</span> <span class="mi">6101994</span><span class="p">,</span>
+          <span class="s2">&quot;putSymbolId&quot;</span><span class="p">:</span> <span class="mi">6102010</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;strikePrice&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+          <span class="s2">&quot;callSymbolId&quot;</span><span class="p">:</span> <span class="mi">6101995</span><span class="p">,</span>
+          <span class="s2">&quot;putSymbolId&quot;</span><span class="p">:</span> <span class="mi">6102011</span>
+        <span class="p">}],</span>
+        <span class="s2">&quot;multiplier&quot;</span><span class="p">:</span> <span class="mi">100</span>
+      <span class="p">}]</span>
+    <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ticker</strong> (<em>str</em>) – Ticker symbol</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of option chain information for a particular symbol.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_option_quotes">
+<span class="sig-name descname"><span class="pre">get_option_quotes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_option_quotes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_option_quotes" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a single Level 1 market quote and Greek data for one or more option symbols.</p>
+<p>www.questrade.com/api/documentation/rest-operations/market-calls/markets-quotes-options</p>
+<p>This method will return a dictionary of the form</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;optionQuotes&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;underlying&quot;</span><span class="p">:</span> <span class="s2">&quot;MSFT&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;underlyingId&quot;</span><span class="p">:</span> <span class="mi">27426</span><span class="p">,</span>
+            <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;MSFT20Jan17C70.00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;symbolId&quot;</span><span class="p">:</span> <span class="mi">7413503</span><span class="p">,</span>
+            <span class="s2">&quot;bidPrice&quot;</span><span class="p">:</span> <span class="mf">4.90</span><span class="p">,</span>
+            <span class="s2">&quot;bidSize&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;askPrice&quot;</span><span class="p">:</span> <span class="mf">4.95</span><span class="p">,</span>
+            <span class="s2">&quot;askSize&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradePriceTrHrs&quot;</span><span class="p">:</span> <span class="mf">4.93</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradePrice&quot;</span><span class="p">:</span> <span class="mf">4.93</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradeSize&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradeTick&quot;</span><span class="p">:</span> <span class="s2">&quot;Equal&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;lastTradeTime&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-08-17T00:00:00.000000-04:00&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;openPrice&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;highPricehighPrice&quot;</span><span class="p">:</span> <span class="mf">4.93</span><span class="p">,</span>
+            <span class="s2">&quot;lowPrice&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;volatility&quot;</span><span class="p">:</span> <span class="mf">52.374257</span><span class="p">,</span>
+            <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="mf">0.06985</span><span class="p">,</span>
+            <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.01038</span><span class="p">,</span>
+            <span class="s2">&quot;theta&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.001406</span><span class="p">,</span>
+            <span class="s2">&quot;vega&quot;</span><span class="p">:</span> <span class="mf">0.074554</span><span class="p">,</span>
+            <span class="s2">&quot;rho&quot;</span><span class="p">:</span> <span class="mf">0.04153</span><span class="p">,</span>
+            <span class="s2">&quot;openInterest&quot;</span><span class="p">:</span> <span class="mi">2292</span><span class="p">,</span>
+            <span class="s2">&quot;delay&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;isHalted&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;VWAP&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filters</strong> (<em>List of dictionaries</em>) –    List of filters. For example</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">{</span>
+     <span class="s2">&quot;optionType&quot;</span><span class="p">:</span> <span class="s2">&quot;Call&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;underlyingId&quot;</span><span class="p">:</span> <span class="mi">27426</span><span class="p">,</span>
+     <span class="s2">&quot;expiryDate&quot;</span><span class="p">:</span> <span class="s2">&quot;2017-01-20T00:00:00.000000-05:00&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;minstrikePrice&quot;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+     <span class="s2">&quot;maxstrikePrice&quot;</span><span class="p">:</span> <span class="mi">80</span>
+     <span class="p">}</span>
+ <span class="p">]</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="simple">
+<dt>option_ids: [int]</dt><dd><p>List of option IDs</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of option quotes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.get_quote">
+<span class="sig-name descname"><span class="pre">get_quote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.get_quote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.get_quote" title="Link to this definition"></a></dt>
+<dd><p>Get quote.</p>
+<p>This function gets information such as a quote for a single ticker or a list of tickers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tickers</strong> (<em>[str]</em>) – List of tickers</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with quotes or list of dictionaries with quotes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or [dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.refresh_access_token">
+<span class="sig-name descname"><span class="pre">refresh_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_yaml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'access_token.yml'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qtrade.utility.TokenDict" title="qtrade.utility.TokenDict"><span class="pre">TokenDict</span></a></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.refresh_access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.refresh_access_token" title="Link to this definition"></a></dt>
+<dd><p>Refresh access token.</p>
+<p>This method refreshes the access token. This only works if the overall access has not yet
+expired. By default it will look for the yaml-file, but it could also look for the internal
+state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_yaml</strong> (<em>bool, optional [False]</em>) – This parameter controls if the refresh token is sourced from a yaml file
+or if the attribute <cite>access_token</cite> is used (default). If True, the yaml-file will be
+updated.</p></li>
+<li><p><strong>yaml_path</strong> (<em>str, optional</em>) – Path of the yaml-file that will be updated. Defaults to access_token.yml</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with the access token data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.save_token_to_yaml">
+<span class="sig-name descname"><span class="pre">save_token_to_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'access_token.yml'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.save_token_to_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.save_token_to_yaml" title="Link to this definition"></a></dt>
+<dd><p>Save the token payload as a yaml-file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yaml_path</strong> (<em>str, optional</em>) – Path of the yaml-file. If the file already exists, it will be overwritten. Defaults to
+access_token.yml</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.submit_order">
+<span class="sig-name descname"><span class="pre">submit_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acct_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.submit_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.submit_order" title="Link to this definition"></a></dt>
+<dd><p>Submit order.</p>
+<p>This method submits an order to Questrade. Note that currently only partner apps can submit
+orders to the Questrade API. The order information is provided in a dictionary of the form</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;accountNumber&#39;</span><span class="p">:</span> <span class="mi">1234567</span><span class="p">,</span>
+<span class="s1">&#39;symbolId&#39;</span><span class="p">:</span> <span class="mi">3925293</span><span class="p">,</span>
+<span class="s1">&#39;quantity&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="s1">&#39;icebergQuantity&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="s1">&#39;limitPrice&#39;</span><span class="p">:</span> <span class="mf">57.58</span><span class="p">,</span>
+<span class="s1">&#39;isAllOrNone&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="s1">&#39;isAnonymous&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="s1">&#39;orderType&#39;</span><span class="p">:</span> <span class="s1">&#39;Limit&#39;</span><span class="p">,</span>
+<span class="s1">&#39;timeInForce&#39;</span><span class="p">:</span> <span class="s1">&#39;GoodTillCanceled&#39;</span><span class="p">,</span>
+<span class="s1">&#39;action&#39;</span><span class="p">:</span> <span class="s1">&#39;Buy&#39;</span><span class="p">,</span>
+<span class="s1">&#39;primaryRoute&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTO&#39;</span><span class="p">,</span>
+<span class="s1">&#39;secondaryRoute&#39;</span><span class="p">:</span> <span class="s1">&#39;AUTO&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>acct_id</strong> (<em>int</em>) – Account ID for the account to which the order is to be submitted.</p></li>
+<li><p><strong>order_dict</strong> (<em>dict</em>) – Dictionary with the necessary order entries.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with the API response to the order submission.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qtrade.questrade.Questrade.ticker_information">
+<span class="sig-name descname"><span class="pre">ticker_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tickers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qtrade/questrade.html#Questrade.ticker_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.questrade.Questrade.ticker_information" title="Link to this definition"></a></dt>
+<dd><p>Get ticker information.</p>
+<p>This function gets information such as a quote for a single ticker or a list of tickers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tickers</strong> (<em>str or [str]</em>) – List of tickers or a single ticker</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with ticker information or list of dictionaries with ticker information</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict or [dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-qtrade.utility">Collection of utility functions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="qtrade.utility.TokenDict">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qtrade.utility.</span></span><span class="sig-name descname"><span class="pre">TokenDict</span></span><a class="headerlink" href="#qtrade.utility.TokenDict" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qtrade.utility.TokenDict.access_token">
+<span class="sig-name descname"><span class="pre">access_token</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#qtrade.utility.TokenDict.access_token" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qtrade.utility.TokenDict.api_server">
+<span class="sig-name descname"><span class="pre">api_server</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#qtrade.utility.TokenDict.api_server" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qtrade.utility.TokenDict.expires_in">
+<span class="sig-name descname"><span class="pre">expires_in</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#qtrade.utility.TokenDict.expires_in" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qtrade.utility.TokenDict.refresh_token">
+<span class="sig-name descname"><span class="pre">refresh_token</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#qtrade.utility.TokenDict.refresh_token" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qtrade.utility.TokenDict.token_type">
+<span class="sig-name descname"><span class="pre">token_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#qtrade.utility.TokenDict.token_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qtrade.utility.get_access_token_yaml">
+<span class="sig-prename descclassname"><span class="pre">qtrade.utility.</span></span><span class="sig-name descname"><span class="pre">get_access_token_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_yaml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qtrade.utility.TokenDict" title="qtrade.utility.TokenDict"><span class="pre">TokenDict</span></a></span></span><a class="reference internal" href="../_modules/qtrade/utility.html#get_access_token_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.utility.get_access_token_yaml" title="Link to this definition"></a></dt>
+<dd><p>Read in access token yaml.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token_yaml</strong> (<em>str</em>) – Path of the token yaml file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dicitonary with the access token parameters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qtrade.utility.validate_access_token">
+<span class="sig-prename descclassname"><span class="pre">qtrade.utility.</span></span><span class="sig-name descname"><span class="pre">validate_access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_in</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refresh_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qtrade/utility.html#validate_access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qtrade.utility.validate_access_token" title="Link to this definition"></a></dt>
+<dd><p>Validate access token.</p>
+<p>This function validates the access token and ensures that all requiered
+attributes are provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>access_token</strong> (<em>str, optional</em>) – Access token</p></li>
+<li><p><strong>api_server</strong> (<em>str, optional</em>) – Api server URL</p></li>
+<li><p><strong>expires_in</strong> (<em>int, optional</em>) – Time until token expires</p></li>
+<li><p><strong>refresh_token</strong> (<em>str, optional</em>) – Refresh token</p></li>
+<li><p><strong>token_type</strong> (<em>str, optional</em>) – Token type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If any of the inputs is None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-qtrade">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-qtrade" title="Link to this heading"></a></h2>
+<p>module init file</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="qtrade" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Jan Borchmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

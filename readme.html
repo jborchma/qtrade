@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to Qtrade &mdash; Qtrade 0.6.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2bd037f0"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="qtrade" href="api/modules.html" />
+    <link rel="prev" title="Welcome to Qtrade’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Qtrade
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction to Qtrade</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#token-management">Token management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#basic-functionality">Basic functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#account-information">Account information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contributors">Contributors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#disclaimer">Disclaimer</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">qtrade</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Qtrade</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction to Qtrade</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/readme.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction-to-qtrade">
+<h1>Introduction to Qtrade<a class="headerlink" href="#introduction-to-qtrade" title="Link to this heading"></a></h1>
+<p>This is a very basic Python 3 wrapper for the
+<a class="reference external" href="https://www.questrade.com/api/documentation/getting-started">Questrade API</a>, a Canadian low cost
+broker.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>This package is available via <a class="reference external" href="https://pypi.org/project/qtrade/">PyPI</a> and can be installed via
+the command</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>qtrade
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>The main class of the package is called <code class="docutils literal notranslate"><span class="pre">Questrade</span></code> and houses most of the functionality provided
+by the package. Below are a few examples for possible use cases.</p>
+<section id="token-management">
+<h3>Token management<a class="headerlink" href="#token-management" title="Link to this heading"></a></h3>
+<p>The central class can be initialized via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qtrade</span><span class="w"> </span><span class="kn">import</span> <span class="n">Questrade</span>
+
+<span class="n">qtrade</span> <span class="o">=</span> <span class="n">Questrade</span><span class="p">(</span><span class="n">access_code</span><span class="o">=</span><span class="s1">&#39;&lt;access_code&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;access_code&gt;</span></code> is the token that one gets from the Questrade API portal. It is called
+<code class="docutils literal notranslate"><span class="pre">access_code</span></code> since this initial token is used to get the full token data that will include</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;access_token&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">access_token</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="s1">&#39;api_server&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;api_url&gt;&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;expires_in&#39;</span><span class="p">:</span> <span class="mi">1234</span><span class="p">,</span>
+ <span class="s1">&#39;refresh_token&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">refresh_token</span><span class="o">&gt;</span><span class="p">,</span>
+ <span class="s1">&#39;token_type&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The first call initializes the class and the second call gets the full token.</p>
+<p>Another way to initialize the class is to use a token yaml-file via:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qtrade</span> <span class="o">=</span> <span class="n">Questrade</span><span class="p">(</span><span class="n">token_yaml</span><span class="o">=</span><span class="s1">&#39;&lt;yaml_path&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the yaml-file would have the general form</p>
+<p>..code:: yaml</p>
+<blockquote>
+<div><p>access_token: &lt;access_token&gt;
+api_server: &lt;api_url&gt;
+expires_in: 1234
+refresh_token: &lt;refresh_token&gt;
+token_type: Bearer</p>
+</div></blockquote>
+<p>If the token is expired, one can use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qtrade</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>to refresh the access token using the saved refresh token.</p>
+<p>Once the tokens are set correctly, I have currently added methods to get ticker quotes, the
+current status of all positions in any Questrade account that is associated with the tokens,
+any account activities such as trades and dividend payments as well as historical data for
+tickers that are supported by Questrade.</p>
+</section>
+<section id="basic-functionality">
+<h3>Basic functionality<a class="headerlink" href="#basic-functionality" title="Link to this heading"></a></h3>
+<p>There currently exists some basic functionality to get stock information via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aapl</span><span class="p">,</span> <span class="n">amzn</span> <span class="o">=</span> <span class="n">qtrade</span><span class="o">.</span><span class="n">ticker_information</span><span class="p">([</span><span class="s1">&#39;AAPL&#39;</span><span class="p">,</span> <span class="s1">&#39;AMZN&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>and current stock quotes can be obtained via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aapl_quote</span><span class="p">,</span> <span class="n">amzn_quote</span> <span class="o">=</span> <span class="n">qtrade</span><span class="o">.</span><span class="n">get_quote</span><span class="p">([</span><span class="s1">&#39;AAPL&#39;</span><span class="p">,</span> <span class="s1">&#39;AMZN&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>In addition, one can get historical stock quotes via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aapl_history</span> <span class="o">=</span> <span class="n">qtrade</span><span class="o">.</span><span class="n">get_historical_data</span><span class="p">(</span><span class="s1">&#39;AAPL&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-08-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-08-21&#39;</span><span class="p">,</span><span class="s1">&#39;OneHour&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, the last input parameter is the interval between quotes. Another option could be <code class="docutils literal notranslate"><span class="pre">'OneDay'</span></code>.
+For more options, see the <a class="reference external" href="http://www.questrade.com/api/documentation/rest-operations/enumerations/enumerations#historical-data-granularity">Questrade API description</a>.</p>
+</section>
+<section id="account-information">
+<h3>Account information<a class="headerlink" href="#account-information" title="Link to this heading"></a></h3>
+<p>In addition, the Questrade API gives access to account information about the accounts connected to
+the token. The accounts IDs can be accessed via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">account_ids</span> <span class="o">=</span> <span class="n">qtrade</span><span class="o">.</span><span class="n">get_account_id</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>By using the correct account ID, one can get the positions of the accounts via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">positions</span> <span class="o">=</span> <span class="n">qtrade</span><span class="o">.</span><span class="n">get_account_positions</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="mi">123456</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, there exists a method to get all account activities (trades, dividends received, etc.) of
+an account in a certain time frame via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">activities</span> <span class="o">=</span> <span class="n">qtrade</span><span class="o">.</span><span class="n">get_account_activities</span><span class="p">(</span><span class="mi">123456</span><span class="p">,</span> <span class="s1">&#39;2018-08-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-08-16&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="contributors">
+<h2>Contributors<a class="headerlink" href="#contributors" title="Link to this heading"></a></h2>
+<p>Contributions are always appreciated! For example:</p>
+<ul class="simple">
+<li><p>open an issue for a missing feature or a bug</p></li>
+<li><p>give feedback about existing functionality</p></li>
+<li><p>make suggestions for improvements</p></li>
+<li><p>submit a PR with a new feature (though reaching out would be appreciated)</p></li>
+<li><p>etc.</p></li>
+</ul>
+<p>There is a test suite that can be run via <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>. This project uses <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>
+and <code class="docutils literal notranslate"><span class="pre">black</span></code> which takes care of automatic code formatting and linting. When setting up the development
+environment, run <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">install</span></code> to set up the hook. This will run black automatically when
+committing code changes.</p>
+</section>
+<section id="disclaimer">
+<h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Link to this heading"></a></h2>
+<p>I am in no way affiliated with Questrade and using this API wrapper is licensed via the MIT license.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Qtrade’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/modules.html" class="btn btn-neutral float-right" title="qtrade" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Jan Borchmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
