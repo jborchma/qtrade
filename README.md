@@ -117,7 +117,7 @@ Contributions are always appreciated! For example:
 - etc.
 
 There is a test suite that can be run via `python -m pytest`. This project uses `pre-commit`
-and `black`, `flake8` and `isort` which takes care of automatic code formatting and linting. When setting up the development
+and `ruff` which takes care of automatic code formatting and linting. When setting up the development
 environment, run `pre-commit install` to set up the hook. This will run all the linting automatically when
 committing code changes.
 

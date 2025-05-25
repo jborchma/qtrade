@@ -96,7 +96,7 @@ In addition, one can get historical stock quotes via
   aapl_history = qtrade.get_historical_data('AAPL', '2018-08-01', '2018-08-21','OneHour')
 
 Here, the last input parameter is the interval between quotes. Another option could be ``'OneDay'``.
-For more options, see the `Questrade API description <http://www.questrade.com/api/documentation/rest-operations/enumerations/enumerations#historical-data-granularity`_.
+For more options, see the `Questrade API description <http://www.questrade.com/api/documentation/rest-operations/enumerations/enumerations#historical-data-granularity>`_.
 
 Account information
 ^^^^^^^^^^^^^^^^^^^

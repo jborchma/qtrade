@@ -12,18 +12,17 @@
 #
 import os
 import sys
-import sphinx_rtd_theme
 
 from qtrade import __version__
 
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath("../.."))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'Qtrade'
-copyright = '2019, Jan Borchmann'
-author = 'Jan Borchmann'
+project = "Qtrade"
+copyright = "2019, Jan Borchmann"
+author = "Jan Borchmann"
 
 
 version = __version__
@@ -38,7 +37,7 @@ release = __version__
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    'sphinx.ext.napoleon',
+    "sphinx.ext.napoleon",
     "sphinx.ext.githubpages",
     "sphinx.ext.viewcode",
 ]
@@ -48,7 +47,7 @@ napoleon_use_param = False
 napoleon_use_ivar = True
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 
 source_suffix = [".rst", ".md"]
@@ -68,10 +67,15 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
-#autodoc
-autodoc_defualt_flags = ["members", "undoc-members", "show-inheritance", "inherited-members"]
+
+# autodoc
+autodoc_defualt_flags = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "inherited-members",
+]
 
 # app setup hook
 # def setup(app):
