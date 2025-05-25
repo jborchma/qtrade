@@ -3,7 +3,7 @@ repos:
     rev: "v0.11.11"
     hooks:
       - id: ruff
-        args: ["--fix", --max-line-length=100]
+        args: ["--fix", --line-length=100]
       - id: ruff-format
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
